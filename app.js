@@ -9,7 +9,7 @@
 let companiesData = [];
 let selectedCompanies = new Set();
 let currentSort = { field: 'score', direction: 'desc' };
-let currentFilters = { search: '', pod: 'all', source: 'all' };
+let currentFilters = { search: '', pod: 'all' };
 let currentView = 'overview';
 let allCharts = {};
 let simulationSelectedTickers = new Set();
@@ -243,12 +243,6 @@ function setupFilters() {
         renderTable();
     });
 
-    // Filtro por Fonte
-    document.getElementById('source-filter').addEventListener('change', (e) => {
-        currentFilters.source = e.target.value;
-        renderTable();
-    });
-
     // Ordenação por coluna
     document.querySelectorAll('th[data-sort]').forEach(th => {
         th.addEventListener('click', () => {
@@ -315,13 +309,12 @@ function renderTable() {
                     ${company.performance?.ytd ? formatPercentage(company.performance.ytd) : '-'}
                 </td>
                 <td>${formatNumber(company.metrics.dividendYield, 2)}%</td>
-                <td><span class="tag ${getRecommendationClass(company.recommendation)}">${company.recommendation}</span></td>
             </tr>
         `;
     }).join('');
 
     if (sorted.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="16" style="text-align:center;">Nenhuma empresa encontrada.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="15" style="text-align:center;">Nenhuma empresa encontrada.</td></tr>';
     }
 }
 
@@ -341,11 +334,6 @@ function getFilteredData() {
 
         // Pod
         if (currentFilters.pod !== 'all' && company.pod !== currentFilters.pod) {
-            return false;
-        }
-
-        // Fonte
-        if (currentFilters.source !== 'all' && company.source !== currentFilters.source) {
             return false;
         }
 
@@ -490,168 +478,175 @@ function calculateUpside(currentPrice, targetPrice) {
 }
 
 /**
- * HTML COMPLETO PARA STRATEGY SECTION - Teses & Playbook
+ * HTML COMPLETO PARA STRATEGY SECTION - Teses & Drivers por Empresa/Setor
  */
 function getStrategyHTML() {
     return `
-<div class="section-title">Teses de Investimento & Playbook de Execução</div>
+<div class="section-title">Teses de Investimento & Drivers de Mercado</div>
 <div class="section-subtitle">
-    O racional estratégico, gatilhos de entrada/saída e regras de decisão para cada tese de investimento (Pod)
+    Mapeamento completo de drivers específicos por empresa e drivers macro por setor
 </div>
 
-<div class="strategy-container">
+<div class="strategy-intro">
+    <h3>📚 Como Usar Este Mapeamento</h3>
+    <p><strong>Drivers específicos (palavras):</strong> palavras-chave curtas que, quando mudam, tendem a afetar diretamente o preço da ação (ex.: "Brent", "celulose", "Selic", "ARPU", "frete", "sinistralidade").</p>
+    <p><strong>O que isso significa:</strong> explicação rápida — por que o driver move a ação (ex.: "Brent↑ → receita Petrobras↑").</p>
+    <p><strong>Indicador / Horizonte:</strong></p>
+    <ul>
+        <li><strong>Positivo</strong> = aumento do driver tende a empurrar o preço da ação para cima</li>
+        <li><strong>Negativo</strong> = aumento tende a pressionar para baixo</li>
+        <li><strong>Misto</strong> = depende (ex.: intervenção política)</li>
+        <li><strong>Curto</strong> = impacto visível em dias/meses</li>
+        <li><strong>Médio</strong> = trimestres até 2 anos</li>
+        <li><strong>Longo</strong> = efeitos estruturais (vários anos)</li>
+    </ul>
+    <p class="warning">⚠️ <strong>Use esses pares (driver → polaridade/horizonte) como sinais para análise, não como recomendação de compra/venda.</strong> Eles servem para priorizar o que monitorar em cada ação.</p>
+</div>
 
-    <!-- Pod Secular -->
-    <div class="strategy-card">
-        <div class="header secular">
-            <h3>🚀 Pod Secular (Crescimento Estrutural)</h3>
-            <p class="thesis-intro">Tese de crescimento de longo prazo, <strong>independente do ciclo macroeconômico</strong>. Empresas com vantagens competitivas sustentáveis (moat), alta capacidade de reinvestimento e geração de valor consistente. Foco em <code>ROE</code> alto, margens expansíveis e crescimento acima da média do mercado.</p>
-        </div>
-        <div class="content">
-            <div class="buy-section">
-                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
-                <ul>
-                    <li><strong>Qualidade Comprovada:</strong> <code>metrics.roe</code> ≥ 20% <strong>E</strong> <code>metrics.roic</code> ≥ 15% (indicando retornos superiores ao custo de capital).</li>
-                    <li><strong>Crescimento Sustentável:</strong> <code>metrics.earningsGrowth</code> ≥ 15% a.a. por pelo menos 2 trimestres consecutivos.</li>
-                    <li><strong>Confirmação Técnica:</strong> <code>technicalAnalysis.momentum.macd.trend</code> = "BULLISH" (momentum técnico confirmando a tese).</li>
-                    <li><strong>Smart Money Positivo:</strong> <code>smartMoney.institutional.flowTrend</code> = "POSITIVE" (capital institucional entrando).</li>
-                    <li><strong>Valuation Razoável:</strong> <code>metrics.pe</code> < 30x OU <code>metrics.pe / metrics.earningsGrowth</code> < 1.5 (PEG ratio atrativo).</li>
-                </ul>
-            </div>
-            <div class="sell-section">
-                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
-                <ul>
-                    <li><strong>Quebra da Tese de Crescimento:</strong> <code>metrics.earningsGrowth</code> fica abaixo de 5% (ou da inflação <code>macroAnalysis.brazil.ipca</code>) por 2 trimestres consecutivos.</li>
-                    <li><strong>Deterioração de Margens:</strong> <code>metrics.ebitdaMargin</code> apresenta queda superior a 20% relativa em 3 trimestres, indicando perda de poder de precificação (moat enfraquecido).</li>
-                    <li><strong>Valuation Esticado:</strong> <code>metrics.pe</code> > 40x E <code>upside1Y</code> < 15% (risco/retorno desfavorável).</li>
-                    <li><strong>Reversão Técnica:</strong> <code>technicalAnalysis.momentum.rsi14</code> > 80 por 3 semanas E <code>technicalAnalysis.volume.accumDist</code> = "DISTRIBUTION" (euforia + distribuição institucional).</li>
-                </ul>
-            </div>
-            <div class="examples-section">
-                <h4>📌 Exemplos de Empresas Pod Secular:</h4>
-                <p>WEG, RADL3 (Raia Drogasil), HYPE3 (Hypera), empresas de tecnologia/saúde com crescimento estrutural.</p>
-            </div>
-        </div>
+<!-- TABELA DE DRIVERS POR EMPRESA -->
+<div class="strategy-section">
+    <h2>📊 Drivers Específicos por Empresa</h2>
+    <div class="table-wrapper">
+        <table class="drivers-table">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Empresa</th>
+                    <th>Setor</th>
+                    <th>Drivers Específicos</th>
+                    <th>O que isso significa</th>
+                    <th>Indicador / Horizonte</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${getCompanyDriversRows()}
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <!-- Pod Global -->
-    <div class="strategy-card">
-        <div class="header global">
-            <h3>🌍 Pod Global (Commodities & Exportação)</h3>
-            <p class="thesis-intro">Tese <strong>descorrelacionada da Selic brasileira</strong>. O retorno depende do ciclo da commodity subjacente (minério, celulose, petróleo) e da variação cambial (Real vs Dólar). Empresas exportadoras ou com receita dolarizada se beneficiam de <code>macroAnalysis.brazil.exchange.trend</code> = "DEPRECIATION" (dólar em alta).</p>
-        </div>
-        <div class="content">
-            <div class="buy-section">
-                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
-                <ul>
-                    <li><strong>Ciclo de Commodity Iniciando Alta:</strong> O preço da commodity principal (verificar em fontes externas: minério, celulose, petróleo) inicia tendência de alta confirmada (ex: acima da Média Móvel de 50 dias).</li>
-                    <li><strong>Câmbio Favorável:</strong> <code>macroAnalysis.brazil.exchange.trend</code> = "DEPRECIATION" (Real se desvalorizando, inflando receita em Reais).</li>
-                    <li><strong>Valuation de Ciclo:</strong> <code>metrics.evEbitda</code> < 5x (indicando ponto de entrada atrativo no ciclo de commodity).</li>
-                    <li><strong>Alavancagem Controlada:</strong> <code>metrics.netDebtToEbitda</code> < 2.5x (empresa com balanço saudável para aproveitar a alta).</li>
-                    <li><strong>Upside Expressivo:</strong> <code>upside1Y</code> > 25% (potencial justifica o risco de timing do ciclo).</li>
-                </ul>
-            </div>
-            <div class="sell-section">
-                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
-                <ul>
-                    <li><strong>Reversão do Ciclo de Commodity:</strong> O preço da commodity perde a Média Móvel de 200 dias ou apresenta padrão técnico de topo (ex: topos descendentes).</li>
-                    <li><strong>Compressão de Margem:</strong> <code>metrics.ebitdaMargin</code> começa a cair, sinalizando que custos estão subindo mais rápido que preços (pico do ciclo).</li>
-                    <li><strong>Reversão Cambial:</strong> <code>macroAnalysis.brazil.exchange.trend</code> = "APPRECIATION" (Real se fortalecendo, prejudicando exportadores).</li>
-                    <li><strong>Valuation Esticado de Ciclo:</strong> <code>metrics.evEbitda</code> > 8x (indicando euforia no setor).</li>
-                </ul>
-            </div>
-            <div class="examples-section">
-                <h4>📌 Exemplos de Empresas Pod Global:</h4>
-                <p>PETR4 (Petrobras), VALE3 (Vale), SUZB3 (Suzano), CSNA3 (CSN), PRIO3 (PetroRio).</p>
-            </div>
-        </div>
+<!-- TABELA DE DRIVERS MACRO POR SETOR -->
+<div class="strategy-section">
+    <h2>🌐 Drivers Macro por Setor</h2>
+    <div class="sector-drivers-intro">
+        <p><strong>Polaridade:</strong> Positivo/Negativo/Volátil/Reativo indica a direção provável do impacto no setor quando o driver muda.</p>
+        <p><strong>Horizonte:</strong> Curto = semanas/meses; Médio = meses até ~2 anos; Longo = efeitos estruturais (vários anos).</p>
+        <p><strong>Aparecer</strong> = use como gatilho de sentimento/curto prazo; <strong>Acontecer</strong> = validação fundamental — reavalie posições quando o evento se materializar.</p>
     </div>
-
-    <!-- Pod Selic -->
-    <div class="strategy-card">
-        <div class="header selic">
-            <h3>📉 Pod Selic (Virada de Ciclo Macro)</h3>
-            <p class="thesis-intro">Tese de <strong>timing macroeconômico</strong>. Ações altamente sensíveis à queda da taxa Selic (juros). Empresas de setores cíclicos domésticos (construção civil, varejo, bancos de crédito) se beneficiam da redução do custo de capital e aquecimento da economia interna. Alavancagem financeira positiva: quanto maior a dívida, maior o ganho com a queda dos juros.</p>
-        </div>
-        <div class="content">
-            <div class="buy-section">
-                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
-                <ul>
-                    <li><strong>Ciclo de Queda de Juros Confirmado:</strong> <code>macroAnalysis.brazil.selic.trend</code> = "DOWN" (Banco Central em ciclo de corte de juros, confirmado por pelo menos 2 reuniões consecutivas do COPOM).</li>
-                    <li><strong>Revisão de Consenso:</strong> <code>analystTargets.revisions.delta30d</code> > 10% (mercado começando a reprecificar o setor para cima).</li>
-                    <li><strong>Alavancagem como Catalisador:</strong> Focar em empresas com <code>metrics.netDebtToEbitda</code> > 1.5x, pois são as que mais se beneficiam da queda no custo da dívida.</li>
-                    <li><strong>Valuation Comprimido:</strong> <code>metrics.pe</code> < 12x (setor ainda subprecificado, não refletindo a melhora macro).</li>
-                    <li><strong>Upside Substancial:</strong> <code>upside1Y</code> > 30% (potencial de reprecificação justifica o risco).</li>
-                </ul>
-            </div>
-            <div class="sell-section">
-                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
-                <ul>
-                    <li><strong>Inversão do Ciclo de Juros:</strong> <code>macroAnalysis.brazil.selic.trend</code> = "UP" (COPOM sinaliza novo ciclo de alta de juros).</li>
-                    <li><strong>Valuation de Euforia:</strong> <code>metrics.pe</code> do setor (ex: Construção Civil) ultrapassa 20x, indicando que a tese já foi precificada.</li>
-                    <li><strong>Deterioração Fundamental:</strong> <code>metrics.revenueGrowth</code> < 5% por 2 trimestres, indicando que a melhora macro não está se traduzindo em resultados.</li>
-                    <li><strong>Realização de Lucro em Alvo:</strong> <code>currentPrice</code> atinge ou supera <code>projections.target1Y</code> (tese concluída, realizar lucro).</li>
-                </ul>
-            </div>
-            <div class="examples-section">
-                <h4>📌 Exemplos de Empresas Pod Selic:</h4>
-                <p>PLPL3 (Plano & Plano), CURY3 (Cury), DIRR3 (Direcional), CPFE3 (CPFL), CMIG4 (Cemig), EQTL3 (Equatorial).</p>
-            </div>
-        </div>
+    <div class="table-wrapper">
+        <table class="sector-drivers-table">
+            <thead>
+                <tr>
+                    <th>Setor</th>
+                    <th>Driver Macro</th>
+                    <th>Se <strong>Subir</strong></th>
+                    <th>Se <strong>Descer</strong></th>
+                    <th>Se <strong>Aparecer</strong> (notícias)</th>
+                    <th>Se <strong>Acontecer</strong> (evento)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${getSectorDriversRows()}
+            </tbody>
+        </table>
     </div>
-
-    <!-- Playbook de Saída Geral -->
-    <div class="strategy-card">
-        <div class="header exit">
-            <h3>🎯 Playbook Universal de Saída</h3>
-            <p class="thesis-intro">Regras de decisão para <strong>realização de lucro, rotação de carteira ou stop loss fundamental</strong>, aplicáveis independentemente do Pod.</p>
-        </div>
-        <div class="content">
-            <div class="scenario">
-                <h4>📊 Cenário 1: Tese Concluída (Realizar Lucro)</h4>
-                <ul>
-                    <li><strong>Gatilho:</strong> <code>currentPrice</code> ≥ <code>projections.target1Y</code> (alvo de 1 ano atingido).</li>
-                    <li><strong>Ação:</strong> Venda parcial de 30-50% da posição para cristalizar lucro. Realocação do capital em nova oportunidade com <code>upside5Y</code> > 100% (múltiplo de crescimento superior).</li>
-                    <li><strong>Exceção:</strong> Se a empresa mantém <code>metrics.earningsGrowth</code> > 20% E <code>metrics.roe</code> > 25%, considerar manter a posição (tese de crescimento ainda intacta).</li>
-                </ul>
-            </div>
-
-            <div class="scenario">
-                <h4>🔄 Cenário 2: Custo de Oportunidade (Rotação de Carteira)</h4>
-                <ul>
-                    <li><strong>Gatilho:</strong> Um ativo na carteira (Ativo A) apresenta <code>upside5Y</code> < 50% (múltiplo de crescimento 5Y < 1.5x), enquanto surge uma nova tese (Ativo B) com <code>upside5Y</code> > 150% (múltiplo > 2.5x) E <code>score</code> ≥ 80.</li>
-                    <li><strong>Ação:</strong> Vender 100% do Ativo A e alocar 100% no Ativo B. A diferença de múltiplo justifica a rotação (maximizar potencial da carteira).</li>
-                    <li><strong>Validação:</strong> O Ativo B deve atender aos gatilhos de compra do Pod correspondente (não comprar apenas por upside, validar fundamentos).</li>
-                </ul>
-            </div>
-
-            <div class="scenario">
-                <h4>🚨 Cenário 3: Tese Quebrada (Stop Loss Fundamental)</h4>
-                <ul>
-                    <li><strong>Gatilho Crítico:</strong> <code>pod</code> = "Pod Sell" (empresa reclassificada como "Evitar" - ex: GOLL4, AMBP3).</li>
-                    <li><strong>Gatilho do Pod:</strong> O gatilho de <strong>saída</strong> do Pod principal foi ativado (ex: Pod Global com commodity em bear market confirmado, Pod Selic com Selic subindo).</li>
-                    <li><strong>Ação:</strong> <strong>Venda total e imediata</strong>. Preservação de capital é a prioridade absoluta. Não esperar recuperação - tese já invalidada.</li>
-                    <li><strong>Exceção Zero:</strong> Não há exceção. Tese quebrada = sair.</li>
-                </ul>
-            </div>
-
-            <div class="scenario">
-                <h4>⚖️ Cenário 4: Gerenciamento de Risco (Rebalanceamento)</h4>
-                <ul>
-                    <li><strong>Gatilho:</strong> Um ativo ultrapassou 25% da carteira total (concentração excessiva), mesmo que a tese continue válida.</li>
-                    <li><strong>Ação:</strong> Reduzir posição para 15-20% da carteira, realocando o excesso em outras oportunidades do portfólio para diversificação.</li>
-                    <li><strong>Racionalidade:</strong> Proteger a carteira de risco idiossincrático (evento específico da empresa).</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <div class="strategy-footer">
-    <p><strong>Nota Importante:</strong> Este playbook é um framework de decisão baseado em dados quantitativos. Toda decisão de investimento deve considerar também análise qualitativa (governança, competição, regulação) e tolerância individual ao risco. <strong>Rentabilidade passada não garante rentabilidade futura.</strong></p>
+    <p><strong>Nota Importante:</strong> Este mapeamento é baseado em análise histórica e relações fundamentalistas conhecidas. Combine este mapeamento com a análise de cada empresa individual (métricas, scores) para decisões de investimento informadas. <strong>Rentabilidade passada não garante rentabilidade futura.</strong></p>
 </div>
     `;
+}
+
+/**
+ * GERA LINHAS DA TABELA DE DRIVERS POR EMPRESA
+ */
+function getCompanyDriversRows() {
+    const drivers = [
+        { ticker: "PLPL3", empresa: "Papelaria / Papel", setor: "Papel & Celulose", drivers: "celulose, preço pulp (USD), demanda export, custo madeira", significado: "Variação do preço celulose/pulp e demanda externa impactam receita e margem", indicador: "Positivo se subir demanda/preço / Longo" },
+        { ticker: "CURY3", empresa: "Cury Construtora", setor: "Construção Civil", drivers: "taxa juros (Selic), vendas lançamentos, distratos, financiamento imobiliário", significado: "Juros mais baixos + vendas altas = maior VGV e lucro", indicador: "Positivo se Selic cair / Curto-Médio" },
+        { ticker: "DIRR3", empresa: "Direcional", setor: "Construção Civil", drivers: "financiamento habitacional, incorporadoras, distratos, lançamentos", significado: "Mudanças nos subsídios e crédito alteram velocidade de vendas", indicador: "Positivo se crédito facilitar / Curto-Médio" },
+        { ticker: "PETR4", empresa: "Petrobras", setor: "Petróleo & Gás", drivers: "preço Brent, câmbio (USD/BRL), produção/PO&G, política pública, royalties", significado: "Petróleo + câmbio favorável aumentam receita; intervenção estatal é risco", indicador: "Positivo se Brent↑ ou USD↑ / Misto (político)" },
+        { ticker: "VALE3", empresa: "Vale", setor: "Mineração", drivers: "minério de ferro (Fe), demanda China, frete, acidentes/vale-disponibilidade", significado: "Preço do minério e demanda chinesa determinam receitas", indicador: "Positivo se minério↑ / Longo" },
+        { ticker: "SUZB3", empresa: "Suzano", setor: "Celulose", drivers: "celulose (short-fibre), câmbio, custo madeira, demanda papel tissue", significado: "Preços de celulose e câmbio definem margens", indicador: "Positivo se celulose↑ / Longo" },
+        { ticker: "WEGE3", empresa: "WEG", setor: "Bens de Capital", drivers: "ordem de fabricação, transição energética, exportações, dólar", significado: "Crescimento global e elétrificação aumentam vendas", indicador: "Positivo se capex global↑ / Longo" },
+        { ticker: "ITUB4", empresa: "Itaú", setor: "Bancos", drivers: "spreads, inadimplência, taxa juros, crédito PJ/consumidor", significado: "Juros e qualidade da carteira definem lucro bancário", indicador: "Positivo se spreads↑ e inadimplência↓ / Curto-Médio" },
+        { ticker: "BBDC4", empresa: "Bradesco", setor: "Bancos", drivers: "taxa juros, qualidade crédito, provisões, capilaridade", significado: "Mesmo raciocínio bancos: juro e crédito impactam lucro", indicador: "Positivo se Selic↑ (em margem) / Curto-Médio" },
+        { ticker: "BBAS3", empresa: "Banco do Brasil", setor: "Bancos", drivers: "política agrícola, crédito rural, exposição governo, juro", significado: "Forte exposição ao agro e ao setor público", indicador: "Positivo se crédito agro↑ / Misto (político)" },
+        { ticker: "BBSE3", empresa: "BB Seguridade", setor: "Seguros/Financeiro", drivers: "taxas juros (investimento reservas), sinistralidade, venda seguros", significado: "Rendimento de reservas e sinistros definem resultado", indicador: "Positivo se juros↑ e sinistralidade↓ / Curto-Médio" },
+        { ticker: "MGLU3", empresa: "Magazine Luiza", setor: "Varejo / E-commerce", drivers: "GMV, margem bruta, logística, churn, vendas omnichannel", significado: "Crescimento de vendas/market share = acelera lucro", indicador: "Positivo se GMV↑ e logística melhora / Curto-Médio" },
+        { ticker: "LREN3", empresa: "Lojas Renner", setor: "Varejo", drivers: "consumo doméstico, ticket médio, inventário, sazonalidade", significado: "Consumo e giro de estoque impactam lucro", indicador: "Positivo se consumo↑ / Curto-Médio" },
+        { ticker: "GGBR4", empresa: "Gerdau", setor: "Siderurgia", drivers: "preço aço, construção/automotivo demanda, custo sucata", significado: "Aço e demanda industrial ditam receita", indicador: "Positivo se demanda construção/auto↑ / Longo" },
+        { ticker: "B3SA3", empresa: "B3 (Bolsa)", setor: "Serviços Financeiros", drivers: "volumes negociação, juros, oferta IPOs, volatilidade", significado: "Mais volume = mais receita de clearing/negociação", indicador: "Positivo se volumes/IPO↑ / Curto-Médio" },
+        { ticker: "CSNA3", empresa: "CSN", setor: "Siderurgia / Mineração", drivers: "preço aço, minério, demanda construção, câmbio", significado: "Mesma dinâmica do aço e minério", indicador: "Positivo se demanda industrial↑ / Longo" },
+        { ticker: "CPFE3", empresa: "CPFL", setor: "Energia Elétrica", drivers: "consumo industrial, tarifas ANEEL, reajustes regulatórios", significado: "Tarifas e consumo definem receita regulada", indicador: "Positivo se tarifas aprovadas / Curto-Médio" },
+        { ticker: "ABEV3", empresa: "Ambev", setor: "Bebidas", drivers: "consumo doméstico, preço/taxa câmbio (insumos), concorrência", significado: "Volume e preço são determinantes", indicador: "Positivo se consumo↑ / Curto" },
+        { ticker: "HYPE3", empresa: "Hypera", setor: "Farmacêutica", drivers: "lançamentos, regulação preço, venda OTC, M&A", significado: "Pipeline e regulação afetam crescimento", indicador: "Positivo se lançamentos/M&A bem-sucedidos / Longo" },
+        { ticker: "CCRO3", empresa: "CCR", setor: "Concessões (infra)", drivers: "tráfego rodoviário, pedágio, reajuste contratual, investimentos públicos", significado: "Volume tráfego e reajustes geram receita", indicador: "Positivo se tráfego↑ e reajustes aprovados / Longo" },
+        { ticker: "JBSS3", empresa: "JBS", setor: "Proteínas / Alimentos", drivers: "preço commodities (soja, milho), câmbio, exportações, sanidade", significado: "Custo de ração e exportações impactam margem", indicador: "Positivo se preço proteínas↑ e câmbio favorável / Curto-Médio" },
+        { ticker: "RADL3", empresa: "Raia Drogasil", setor: "Varejo / Farmácias", drivers: "fluxo clientes, vendas mesmas lojas, margem genéricos", significado: "Crescimento de SSS e expansão de lojas", indicador: "Positivo se SSS↑ / Curto-Médio" },
+        { ticker: "FLRY3", empresa: "Fleury", setor: "Saúde / Diagnóstico", drivers: "volume exames, parcerias, regulação ANS, telemedicina", significado: "Volume de serviços e contratos com planos", indicador: "Positivo se demanda exames↑ / Curto-Médio" },
+        { ticker: "VIVT3", empresa: "Telefônica Brasil (Vivo)", setor: "Telecom", drivers: "ARPU, capex 5G, churn, regulamentação ANATEL", significado: "ARPU e roll-out 5G definem receita", indicador: "Positivo se ARPU/5G adoption↑ / Longo" },
+        { ticker: "CMIG4", empresa: "Cemig", setor: "Energia", drivers: "produção hidrelétrica, chuvas, tarifa, bandeiras ANEEL", significado: "Hidrologia e tarifas impactam caixa", indicador: "Positivo se chuvas favoráveis / Curto" },
+        { ticker: "EQTL3", empresa: "Equatorial", setor: "Energia", drivers: "eficiência distribuição, tarifas, expansão concessões", significado: "Menor perda = mais margem", indicador: "Positivo se expansão e redução perdas / Curto-Médio" },
+        { ticker: "CPLE6", empresa: "Copel", setor: "Energia", drivers: "chuvas, tarifas, geração/hidro, contratos", significado: "Hidrologia + contratos regulados importam", indicador: "Positivo se chuvas↑ e reajustes / Curto" },
+        { ticker: "ITSA4", empresa: "Itaúsa", setor: "Holdings / Investimentos", drivers: "performance holdings (ITUB, K), retorno dividendos", significado: "Resultado depende das subsidiárias", indicador: "Positivo se holdings performarem / Longo" },
+        { ticker: "PRIO3", empresa: "PetroRio", setor: "Petróleo & Gás", drivers: "produção óleo, preço Brent, eficiência ativos maduros", significado: "Produção e preço = caixa e dividendos", indicador: "Positivo se produção↑ e Brent↑ / Curto-Médio" },
+        { ticker: "MRFG3", empresa: "Marfrig", setor: "Proteína / Alimentos", drivers: "preço proteína, exportações, custos ração", significado: "Similar JBS: custos e exportações definem margem", indicador: "Positivo se demanda/proteína↑ / Curto-Médio" },
+        { ticker: "AZUL4", empresa: "Azul", setor: "Linhas Aéreas", drivers: "demanda viagens, preço combustível (jet fuel), capacidade", significado: "Recuperação de demanda e combustível são chave", indicador: "Positivo se demanda↑ e combustível↓ / Curto" },
+        { ticker: "GOLL4", empresa: "Gol", setor: "Linhas Aéreas", drivers: "demanda, combustível, capacidade, passagens média", significado: "Mesmo da Azul: demanda e custos → lucro", indicador: "Positivo se demanda↑ e combustível↓ / Curto" },
+        { ticker: "VAMO3", empresa: "Vamos", setor: "Locação de caminhões", drivers: "frete rodoviário, demanda logística, taxa juros leasing", significado: "Ciclo logístico e frete determinam uso de frotas", indicador: "Positivo se frete↑ / Curto-Médio" }
+    ];
+
+    return drivers.map(d => `
+        <tr>
+            <td><strong>${d.ticker}</strong></td>
+            <td>${d.empresa}</td>
+            <td>${d.setor}</td>
+            <td class="drivers-cell">${d.drivers}</td>
+            <td>${d.significado}</td>
+            <td class="indicator-cell">${d.indicador}</td>
+        </tr>
+    `).join('');
+}
+
+/**
+ * GERA LINHAS DA TABELA DE DRIVERS MACRO POR SETOR
+ */
+function getSectorDriversRows() {
+    const sectors = [
+        { setor: "Papel & Celulose", driver: "Preço da celulose (FOEX)", subir: "Positivo — aumenta receita de exportadoras; melhora margem. (Curto/Médio)", descer: "Negativo — compressão de margens e guidance revisado para baixo. (Curto/Médio)", aparecer: "Volátil/Positivo — relatório de tightness de oferta puxa expectativa e preço no curto. (Curto)", acontecer: "Material/Positivo — alta sustentada muda guidance, CAPEX e distribuição de caixa. (Médio/Longo)" },
+        { setor: "Construção Civil", driver: "Selic / Crédito imobiliário / INCC", subir: "Negativo (Selic↑) — encarece financiamento e reduce demanda. (Curto/Médio)", descer: "Positivo (Selic↓) — estimula lançamentos e vendas; INCC↓ melhora margens. (Curto/Médio)", aparecer: "Neutro/Negativo — notícia de aperto de crédito afeta sentiment imediatamente. (Curto)", acontecer: "Direto — novos programas/linhas de crédito (ou cortes) mudam VGV e execução. (Médio)" },
+        { setor: "Petróleo & Gás", driver: "Brent / decisões OPEP+ / câmbio", subir: "Positivo p/ produtoras se Brent↑; Negativo p/ consumidores (avião, transporte). (Curto/Médio)", descer: "Negativo p/ produtoras se Brent↓; Positivo p/ setores consumidores. (Curto/Médio)", aparecer: "Volátil — rumor de corte/expansão de oferta move preço e sentimento. (Curto)", acontecer: "Forte — corte/expansão efetivo altera receita e investimentos. (Curto/Médio)" },
+        { setor: "Mineração / Siderurgia", driver: "Preço minério / demanda China / frete", subir: "Positivo se minério↑ e China demanda↑ — margens e volumes sobem. (Curto/Médio)", descer: "Negativo se minério↓ ou China desacelera — volumes e preços caem. (Curto/Médio)", aparecer: "Volátil — dados PMI/estoques chineses geram movimentos rápidos. (Curto)", acontecer: "Material — pacote de estímulos/excesso de oferta muda ciclos e guidance. (Médio)" },
+        { setor: "Bens de Capital / Indústria", driver: "Ciclo de investimento (CAPEX) / backlog / PMI", subir: "Positivo se CAPEX↑ / backlog↑ — visibilidade e receita futura. (Médio/Longo)", descer: "Negativo se CAPEX↓ / backlog reduzido — demanda cai. (Médio)", aparecer: "Positivo/Neutro — anúncio de programas de investimento provoca re-rating. (Curto/Médio)", acontecer: "Transformador — execução de programas amplia vendas por anos. (Longo)" },
+        { setor: "Bancos", driver: "Selic / spread bancário / inadimplência / PDD", subir: "Positivo se spread↑ e inadimplência↓ — lucro melhora. (Curto/Médio)", descer: "Negativo se inadimplência↑ ou spread comprimido — PDD sobe e lucro reduz. (Curto/Médio)", aparecer: "Volátil — sinalizações do BC afetam provisões e pricing. (Curto)", acontecer: "Estrutural — ciclo de juros sustentado altera modelo de lucro e valuation. (Médio)" },
+        { setor: "Seguros / Financeiro (BBSE)", driver: "Taxas de juros (retorno reservas) / sinistralidade", subir: "Positivo se juros↑ e sinistralidade↓ — resultado financeiro e margem melhoram. (Curto/Médio)", descer: "Negativo se sinistralidade↑ ou juros↓ — reservas rendem menos e prováveis pressões. (Curto/Médio)", aparecer: "Neutro/Volátil — notícias de grandes sinistros afetam curto prazo. (Curto)", acontecer: "Direto — mudança regulatória ou sinistro macro altera provisões e pricing. (Médio)" },
+        { setor: "Varejo / Consumo", driver: "Renda disponível / inflação / confiança consumidor / GMV", subir: "Positivo se renda↑ e confiança↑ — ticket e vendas sobem. (Curto/Médio)", descer: "Negativo se inflação↑ real/poder de compra↓ — promoções e compressão de margem. (Curto)", aparecer: "Reativo — relatórios de confiança/PIB alteram expectativa e estoque. (Curto)", acontecer: "Material — mudança persistente no consumo (por ex., recessão) impacta receitas. (Médio)" },
+        { setor: "Siderurgia / Metalurgia", driver: "Preço do aço / custo minério / demanda industrial", subir: "Positivo se preço aço↑ e demanda industrial↑ — melhora margem. (Curto/Médio)", descer: "Negativo se preço aço↓ ou custo minério↑ — margem comprimida. (Curto/Médio)", aparecer: "Volátil — notícias sobre capacidade global / oferta/China movem preço. (Curto)", acontecer: "Impacto direto — booms ou quedas industriais mudam volumes e guidance. (Médio)" },
+        { setor: "Serviços Financeiros / Bolsa (B3)", driver: "Volume negociado / volatilidade / IPOs", subir: "Positivo se volumes↑ e volatilidade saudável — receitas transacionais sobem. (Curto/Médio)", descer: "Negativo se volumes↓ ou mercado quieto — receitas transacionais caem. (Curto)", aparecer: "Positivo — aparecimento de grandes IPOs ou fusões aumenta volumes. (Curto)", acontecer: "Direto — onda de IPOs / mercado ativo gera ganho de receita consistente. (Curto/Médio)" },
+        { setor: "Energia Elétrica", driver: "Hidrologia (reservatórios), tarifas ANEEL, bandeiras", subir: "Positivo se hidrologia favorável e tarifas reajustadas — menor custo térmico e caixa melhor. (Curto/Médio)", descer: "Negativo se seca persistente (mais térmico) e tarifa limitada — custos sobem. (Curto/Médio)", aparecer: "Volátil — relatório hídrico ou decisão de bandeiras muda percepção. (Curto)", acontecer: "Crítico — decisão tarifária ou seca prolongada altera lucro e preço. (Curto/Médio)" },
+        { setor: "Bebidas", driver: "Preço de insumos (malte/açúcar), mix (premium)", subir: "Negativo se insumos↑ — margem pressionada; Positivo se mix premium↑ — ticket sobe. (Curto)", descer: "Positivo se insumos↓ ou mix melhora — margem sobe. (Curto)", aparecer: "Reativo — surtos de custo/fornecimento aparecem rápido nas notícias. (Curto)", acontecer: "Operacional — mudança de mix sustentada altera receita e margem. (Médio)" },
+        { setor: "Farmacêutica", driver: "Regulação de preços / lançamentos / pipeline / genéricos", subir: "Positivo se lançamentos bem-sucedidos e pipeline forte — receita de longo prazo. (Médio/Longo)", descer: "Negativo se regulação apertar preços ou generics ganhar mercado — receita impactada. (Curto/Médio)", aparecer: "Volátil — notícia de aprovação/recall move preço. (Curto)", acontecer: "Estrutural — decisão regulatória ou sucesso de produto muda valuation. (Médio/Longo)" },
+        { setor: "Saúde / Diagnóstico", driver: "Demanda por exames / contratos planos / ANS", subir: "Positivo se demanda↑ e contratos favoráveis — volume e receita aumentam. (Curto/Médio)", descer: "Negativo se planos reduzirem cobertura ou sinistralidade subir — pressão de preço. (Curto/Médio)", aparecer: "Reativo — notícia sobre ANS/contratos afeta curto prazo. (Curto)", acontecer: "Material — mudança regulatória ou grande contrato altera fluxo de caixa. (Médio)" },
+        { setor: "Concessões / Infraestrutura", driver: "Tráfego / revisão tarifária / novos leilões", subir: "Positivo se tráfego↑ e revisões favoráveis — receita cresce. (Curto/Médio)", descer: "Negativo se tráfego↓ ou revisão cortar tarifas — receita reduz. (Curto/Médio)", aparecer: "Volátil — notícia de leilões/renovações traz reação forte. (Curto)", acontecer: "Direto — renovação ou leilão ganho altera backlog e receita futura. (Médio)" },
+        { setor: "Proteínas / Alimentos", driver: "Preço commodities (soja, milho), câmbio, sanidade", subir: "Positivo p/ exportadores se commodities↑ e câmbio favorável (receita em USD). (Curto/Médio)", descer: "Negativo p/ processadores se insumos↑ e não repassável — margem comprimida. (Curto/Médio)", aparecer: "Volátil — relatório USDA/IBGE ou surto sanitário mexe com preço. (Curto)", acontecer: "Estrutural — choque de oferta/sanidade altera produção e preço por meses. (Médio)" },
+        { setor: "Telecomunicações", driver: "ARPU / churn / rollout 5G / regulação ANATEL", subir: "Positivo se ARPU↑ e adopção 5G↑ — receita recorrente sobe. (Médio/Longo)", descer: "Negativo se churn↑ ou ARPU↓ — receita reduz; regulação restritiva aperta margem. (Curto/Médio)", aparecer: "Positivo — notícia de licença/rollout acelera expectativa. (Curto/Médio)", acontecer: "Determinante — rollout 5G/fibra e decisões regulatórias mudam estrutura competitiva. (Médio/Longo)" },
+        { setor: "Aviação", driver: "Preço combustível (jet fuel) / demanda viagens / capacidade", subir: "Negativo se combustível↑ — custo operacional sobe; Positivo se demanda↑ — yield e ocupação melhoram. (Curto)", descer: "Positivo se combustível↓ e demanda↑ — margens melhoram. (Curto)", aparecer: "Volátil — notícia de choque (geopolítico/pandemia) derruba demanda. (Curto)", acontecer: "Direto — choque prolongado (pandemia, crise) reduz demanda e receita significativamente. (Curto/Médio)" },
+        { setor: "Locação de veículos (frotas)", driver: "Frete / demanda logística / custo capex e manutenção", subir: "Positivo se frete/demanda logística↑ — utilização da frota sobe. (Curto/Médio)", descer: "Negativo se frete↓ ou excesso de oferta de frota — utilização cai. (Curto/Médio)", aparecer: "Reativo — notícia de paralisações/logística afeta uso de frota. (Curto)", acontecer: "Operacional — mudança estrutural na cadeia logística altera demanda por frotas. (Médio)" },
+        { setor: "Holdings / Investimentos", driver: "Desconto de holding / alocação capital / performance subsidiárias", subir: "Positivo se desconto reduz (unlock value) ou holdings performam melhor — revalorização. (Médio/Longo)", descer: "Negativo se subsidiárias pioram ou desconto persiste — valuation comprimido. (Médio)", aparecer: "Positivo — anúncio de spin-off ou reestruturação melhora expectativa. (Curto/Médio)", acontecer: "Transformador — execução de spin-off / reorg altera valor percebido e dividends. (Médio/Longo)" }
+    ];
+
+    return sectors.map(s => `
+        <tr>
+            <td><strong>${s.setor}</strong></td>
+            <td>${s.driver}</td>
+            <td class="impact-cell">${s.subir}</td>
+            <td class="impact-cell">${s.descer}</td>
+            <td class="impact-cell">${s.aparecer}</td>
+            <td class="impact-cell">${s.acontecer}</td>
+        </tr>
+    `).join('');
 }
 
 /**
@@ -773,6 +768,14 @@ function createAllCharts() {
         return;
     }
 
+    // Destruir gráficos existentes para evitar duplicação
+    Object.keys(allCharts).forEach(key => {
+        if (allCharts[key]) {
+            allCharts[key].destroy();
+            delete allCharts[key];
+        }
+    });
+
     // Gráfico 1: Top 8 Múltiplos de Crescimento
     createTopMultipleChart();
 
@@ -791,15 +794,15 @@ function createTopMultipleChart() {
 
     const top8 = companiesData.slice(0, 8);
 
-    new Chart(ctx, {
+    allCharts.topMultiple = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: top8.map(c => c.ticker),
             datasets: [{
-                label: 'Múltiplo 10Y',
+                label: 'Múltiplo 5Y',
                 data: top8.map(c => {
-                    const target10Y = getTargetPrice(c, '10Y');
-                    return target10Y ? (target10Y / c.currentPrice).toFixed(2) : 0;
+                    const target5Y = getTargetPrice(c, '5Y');
+                    return target5Y ? (target5Y / c.currentPrice).toFixed(2) : 0;
                 }),
                 backgroundColor: '#0a84ff'
             }]
@@ -828,19 +831,19 @@ function createPodMultipleChart() {
         if (podCompanies.length === 0) return 0;
 
         const sum = podCompanies.reduce((acc, c) => {
-            const target10Y = getTargetPrice(c, '10Y');
-            return acc + (target10Y ? target10Y / c.currentPrice : 0);
+            const target5Y = getTargetPrice(c, '5Y');
+            return acc + (target5Y ? target5Y / c.currentPrice : 0);
         }, 0);
 
         return (sum / podCompanies.length).toFixed(2);
     });
 
-    new Chart(ctx, {
+    allCharts.podMultiple = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: pods.map(p => p.replace('Pod ', '')),
             datasets: [{
-                label: 'Múltiplo Médio 10Y',
+                label: 'Múltiplo Médio 5Y',
                 data: avgMultiples,
                 backgroundColor: ['#0a84ff', '#30d158', '#bf5af2']
             }]
@@ -865,7 +868,7 @@ function createAllocationChart() {
 
     const top5 = companiesData.slice(0, 5);
 
-    new Chart(ctx, {
+    allCharts.allocation = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: top5.map(c => c.ticker),
