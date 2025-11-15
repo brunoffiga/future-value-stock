@@ -2,68 +2,168 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>B3 SmallCaps Intelligence Platform - v2.0 Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B3 SmallCaps Intelligence Platform - Dashboard Principal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /* Importar estilos inline temporariamente - migrar para styles.css depois */
+        @import url('styles/style.css');
+    </style>
 </head>
 <body>
 
+    <!-- ==================== NAVIGATION ==================== -->
     <nav class="main-nav">
         <div class="nav-container">
             <div class="nav-logo">
-                <span class="logo-text">B3 Intelligence</span>
-                <span class="version-badge">v2.0 Pro</span>
+                <span class="logo-text">SmallCaps B3</span>
+                <span class="version-badge">v2.0</span>
             </div>
-            <div class="nav-links">
-                <a href="#overview" class="nav-link active">Overview</a>
-                <a href="#screener" class="nav-link">Screener</a>
-                <a href="#signals" class="nav-link">Sinais</a>
-            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-view="overview">Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-view="strategy">Teses & Estratégia</a></li>
+                <li><a href="#" class="nav-link" data-view="charts">Análise Gráfica</a></li>
+                <li><a href="#" class="nav-link" data-view="simulator">Simulador</a></li>
+            </ul>
         </div>
     </nav>
 
-    <div class="dashboard-container">
-        <div class="dashboard-grid" id="kpi-grid">
+    <!-- ==================== HERO HEADER ==================== -->
+    <header class="hero-header">
+        <div class="hero-content">
+            <h1 class="hero-title">SmallCaps B3 Intelligence</h1>
+            <p class="hero-subtitle">Sistema Profissional de Análise Multidimensional para Ações de Alto Potencial</p>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTAINER ==================== -->
+    <div class="container">
+
+        <!-- ==================== OVERVIEW SECTION ==================== -->
+        <section id="overview-section" class="content-section active">
+
+            <!-- Filtros -->
+            <div class="section">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Buscar Ticker</label>
+                        <input type="text" id="search-input" placeholder="Ex: PLPL3, CURY3, SUZB3...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Filtrar por Tese (Pod)</label>
+                        <select id="pod-filter">
+                            <option value="all">Todos os Pods</option>
+                            <option value="Pod Secular">Pod Secular (Startup)</option>
+                            <option value="Pod Global">Pod Global (Commodity)</option>
+                            <option value="Pod Selic">Pod Selic (Risco-Brasil)</option>
+                            <option value="Pod Sell">Evitar (Venda)</option>
+                            <option value="Pod N/A">N/A (Radar Antigo)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Filtrar por Origem</label>
+                        <select id="source-filter">
+                            <option value="all">Todas as Fontes</option>
+                            <option value="V2">Novas (V2)</option>
+                            <option value="V1+V2">Atualizadas (V1+V2)</option>
+                            <option value="V1">Radar Antigo (V1)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tabela Principal -->
+                <div class="table-wrapper">
+                    <table class="data-table" id="companies-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all" class="select-checkbox"></th>
+                                <th data-sort="ranking">Rank</th>
+                                <th data-sort="ticker">Ticker</th>
+                                <th data-sort="sector">Setor</th>
+                                <th data-sort="pod">Tese (Pod)</th>
+                                <th data-sort="currentPrice">Preço Atual</th>
+                                <th data-sort="score">Score</th>
+                                <th data-sort="metrics.roe">ROE %</th>
+                                <th data-sort="metrics.pe">P/L</th>
+                                <th data-sort="upside1Y" class="highlight-col">Up 1Y %</th>
+                                <th data-sort="upside3Y" class="highlight-col">Up 3Y %</th>
+                                <th data-sort="upside5Y" class="highlight-col">Up 5Y %</th>
+                                <th data-sort="upside10Y" class="highlight-col">Up 10Y %</th>
+                                <th data-sort="projections.target1Y">Alvo 1Y</th>
+                                <th data-sort="performance.ytd">YTD %</th>
+                                <th data-sort="metrics.dividendYield">DY %</th>
+                                <th data-sort="recommendation">Recomendação</th>
+                                <th data-sort="source">Fonte</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companies-table-body">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-        <div class="main-table-container">
-            <table class="advanced-table" id="stocksTable">
-                <thead>
-                    <tr>
-                        <th>Ticker</th>
-                        <th>Empresa</th>
-                        <th>Preço</th>
-                        <th>Target (Mediana)</th>
-                        <th>Upside</th>
-                        <th>Score (0-100)</th>
-                        <th>P/L</th>
-                        <th>ROE</th>
-                        <th>FCF Yield</th>
-                        <th>RSI</th>
-                        <th>EPS Rev.</th>
-                        <th>Insider</th>
-                        <th>ML Prob.</th>
-                        </tr>
-                </thead>
-                <tbody id="stocksTableBody">
-                    </tbody>
-            </table>
+        </section>
+
+        <!-- Outras sections serão carregadas via JavaScript para otimizar -->
+
+    </div>
+
+    <!-- ==================== MODAL DE ANÁLISE DETALHADA ==================== -->
+    <div class="modal" id="analysis-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modal-ticker"></div>
+                    <div class="modal-subtitle" id="modal-company"></div>
+                </div>
+                <button class="modal-close" onclick="closeAnalysisModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Conteúdo preenchido via JavaScript -->
+            </div>
         </div>
     </div>
 
-    <div class="alert-panel" id="alertPanel" style="display: none;">
-        <div class="alert-header">
-            <h3>Alertas em Tempo Real</h3>
-        </div>
-        <div id="alertsList">
+    <!-- ==================== MODAL DE COMPARAÇÃO ==================== -->
+    <div class="modal" id="compare-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Comparação de Ações</div>
+                    <div class="modal-subtitle">Análise lado a lado</div>
+                </div>
+                <button class="modal-close" onclick="closeCompareModal()">×</button>
             </div>
+            <div class="modal-body">
+                <div class="compare-grid" id="compare-grid">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="config/api-config.js"></script>
-    <script src="data/data-companies-enhanced.js"></script>
-    <script src="services/data-collector.js"></script>
-    <script src="services/scoring-engine.js"></script>
-    <script src="services/event-engine.js"></script>
+    <!-- ==================== BOTÃO DE COMPARAÇÃO FLUTUANTE ==================== -->
+    <div class="compare-section">
+        <button class="compare-btn" id="compare-btn" disabled onclick="openCompareModal()">
+            Comparar (<span id="compare-count">0</span>)
+        </button>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p><strong>B3 SmallCaps Intelligence Platform</strong> - Atualizado em Novembro 2025</p>
+            <p>Disclaimer: Este sistema é apenas para fins educacionais. Não constitui recomendação de investimento.</p>
+        </div>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="data-companies.js"></script>
+    <script src="utils.js"></script>
+    <script src="confidence.js"></script>
     <script src="app.js"></script>
+
 </body>
 </html>
