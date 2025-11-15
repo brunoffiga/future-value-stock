@@ -1,217 +1,44 @@
 // ============================
-// DATA-COMPANIES-ENHANCED.JS - Base de Dados Completa Enriquecida
-// FUSÃO: Dados reais do legado + Estrutura avançada V2 (FASE 1.1 a 1.7)
+// DATA-COMPANIES-ENHANCED.JS - Base de Dados Completa
+// FUSÃO: Dados legados + IBOVESPA + Estrutura V2
 // B3 SmallCaps Intelligence Platform v2.0
 // ============================
 
-/**
- * BANCO DE DADOS COMPLETO E ENRIQUECIDO
- *
- * Este arquivo representa a FUSÃO de:
- * 1. Dados reais do data-companies.js (legacy)
- * 2. Estrutura avançada de dados (FASE 1.1 a 1.7)
- *
- * FONTE DA VERDADE: Este é o único arquivo de dados que deve ser usado.
- */
-
 const COMPANIES_DATABASE = [
-    // ==================== POD SELIC (RISCO-BRASIL) ====================
+    // ==================== SMALLCAPS ORIGINAIS ====================
     {
-        // Dados Base (do legacy data-companies.js)
         ticker: "PLPL3",
         name: "Plano & Plano",
         sector: "Construção Civil",
         subsector: "Baixa Renda / MCMV",
         pod: "Pod Selic",
-
         marketCap: 3400000000,
         currentPrice: 16.06,
         targetPrice: 20.60,
         upside: 28.27,
-
-        projections: {
-            target1Y: 20.60,
-            target3Y: 31.00,
-            target5Y: 42.00,
-            target10Y: 62.00
-        },
-
+        projections: { target1Y: 20.60, target3Y: 31.00, target5Y: 42.00, target10Y: 62.00 },
         score: 88,
         ranking: 1,
         recommendation: "STRONG BUY",
         source: "V2",
         confidence: 88,
-
         metrics: {
-            pe: 9.63,
-            roe: 49,
-            roic: 24.89,
-            dividendYield: 5.96,
-            netDebtToEbitda: 0.2,
-            ebitdaMargin: 17.9,
-            revenueGrowth: 29.22,
-            earningsGrowth: 28.45,
-            pb: 3.78,
-            evEbitda: 7.28,
-            beta: 1.2,
-            freeFloat: 27,
-            liquidityDaily: 120000000,
-            fcfYield: 18.5,
-            assetTurnover: 0.85
+            pe: 9.63, roe: 49, roic: 24.89, dividendYield: 5.96,
+            netDebtToEbitda: 0.2, ebitdaMargin: 17.9, revenueGrowth: 29.22,
+            earningsGrowth: 28.45, pb: 3.78, evEbitda: 7.28, beta: 1.2,
+            freeFloat: 27, liquidityDaily: 120000000, fcfYield: 18.5, assetTurnover: 0.85
         },
-
-        performance: {
-            ytd: 71,
-            oneYear: 105.5,
-            threeYears: 145,
-            fiveYears: null
-        },
-
-        catalysts: [
-            "Lançamentos 2H25: R$ 2.5B em VGV programado",
-            "Renovação MCMV 2026 com subsídios ampliados pelo governo",
-            "Follow-on potencial R$ 500M para expansão banco de terrenos",
-            "Parceria estratégica Cyrela em alto padrão (15% do VGV)",
-            "Margem EBITDA estável 17-18% demonstra eficiência operacional"
-        ],
-
-        risks: [
-            "Alta sensibilidade à Selic - cada 100bps impacta ~8% no valuation",
-            "Concentração geográfica em SP (72% das vendas)",
-            "Execução dependente de crédito MCMV e políticas públicas",
-            "Competição intensa no segmento econômico"
-        ],
-
-        keyHighlights: [
-            "ROE 49% - o mais alto do setor de construção",
-            "Líder em habitação econômica com marca consolidada",
-            "45 mil unidades entregues com histórico de qualidade",
-            "Apenas 0.2x dívida/EBITDA - balanço extremamente saudável",
-            "P/L 9.63x muito atrativo vs peers em 12-15x"
-        ],
-
-        analystConsensus: {
-            buy: 8,
-            hold: 1,
-            sell: 0
-        },
-
-        lastResults: {
-            quarter: "2Q25",
-            revenue: 920000000,
-            netIncome: 168000000,
-            ebitda: 164680000
-        },
-
+        performance: { ytd: 71, oneYear: 105.5, threeYears: 145, fiveYears: null },
+        catalysts: ["Lançamentos 2H25: R$ 2.5B em VGV programado", "Renovação MCMV 2026"],
+        risks: ["Alta sensibilidade à Selic"],
+        keyHighlights: ["ROE 49% - o mais alto do setor"],
+        analystConsensus: { buy: 8, hold: 1, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 920000000, netIncome: 168000000, ebitda: 164680000 },
         nextEarnings: "2025-11-06",
         irWebsite: "https://ri.planoeplano.com.br/",
-
-        // ========== DADOS AVANÇADOS (FASE 1.1 a 1.7) ==========
-
-        // FASE 1.1: Consenso de Price Targets
-        analystTargets: {
-            consensus: {
-                mean: 24.50,
-                median: 23.80,
-                high: 28.00,
-                low: 20.00,
-                count: 9,
-                stdDev: 2.5
-            },
-            revisions: {
-                delta30d: 8.5,
-                delta90d: 12.3,
-                upgrades: 3,
-                downgrades: 0
-            },
-            impliedUpside: {
-                toMean: 52.5,
-                toMedian: 48.2,
-                dispersion: 0.10
-            }
-        },
-
-        // FASE 1.3: Análise Técnica
-        technicalAnalysis: {
-            price: {
-                current: 16.06,
-                ma20: 15.80,
-                ma50: 15.20,
-                ma200: 14.50,
-                week52High: 18.90,
-                week52Low: 12.30
-            },
-            momentum: {
-                rsi14: 62.5,
-                macd: {
-                    value: 0.35,
-                    signal: 0.28,
-                    histogram: 0.07,
-                    trend: "BULLISH"
-                },
-                stochastic: 68.2
-            },
-            volume: {
-                avgVolume20d: 850000,
-                ratio: 1.18,
-                accumDist: "ACCUMULATION",
-                obv: 12500000
-            },
-            signals: {
-                overallScore: 72,
-                recommendation: "BUY",
-                support: 14.80,
-                resistance: 17.50
-            }
-        },
-
-        // FASE 1.4: Smart Money
-        smartMoney: {
-            insiders: {
-                last90days: {
-                    netBuys: 4,
-                    totalValue: 850000,
-                    currentPremium: 8.5
-                },
-                ownership: 32.5
-            },
-            institutional: {
-                ownership: 68.5,
-                change3m: 5.2,
-                change12m: 12.8,
-                flowTrend: "POSITIVE",
-                topHolders: ["Verde AM", "XP Asset", "BTG Pactual"]
-            }
-        },
-
-        // FASE 1.6: ML Predictions
-        mlPredictions: {
-            randomForest: {
-                prediction30d: "UP",
-                probability: 0.78,
-                expectedReturn: 8.5
-            },
-            lstm: {
-                prediction30d: "UP",
-                probability: 0.72
-            },
-            ensemble: {
-                consensus: "STRONG_BUY",
-                agreement: 0.80
-            },
-            backtest: {
-                accuracy90d: 78,
-                sharpeRatio: 1.85,
-                maxDrawdown: -12.5
-            }
-        },
-
         lastUpdated: "2025-11-15T10:30:00Z",
         dataSource: "hybrid"
     },
-
-    // Repetir para as demais empresas com dados enriquecidos...
-    // (Por questão de brevidade do código, vou incluir apenas mais 3 exemplos completos)
 
     {
         ticker: "CURY3",
@@ -219,183 +46,30 @@ const COMPANIES_DATABASE = [
         sector: "Construção Civil",
         subsector: "Média Renda / MCMV",
         pod: "Pod Selic",
-
         marketCap: 5600000000,
         currentPrice: 32.94,
         targetPrice: 40.01,
         upside: 21.46,
-
-        projections: {
-            target1Y: 40.01,
-            target3Y: 45.00,
-            target5Y: 58.00,
-            target10Y: 85.00
-        },
-
+        projections: { target1Y: 40.01, target3Y: 45.00, target5Y: 58.00, target10Y: 85.00 },
         score: 87,
         ranking: 2,
         recommendation: "STRONG BUY",
         source: "V2",
         confidence: 85,
-
         metrics: {
-            pe: 12.34,
-            roe: 66,
-            roic: 42,
-            dividendYield: 0,
-            netDebtToEbitda: -0.3,
-            ebitdaMargin: 43.4,
-            revenueGrowth: 38,
-            earningsGrowth: 52,
-            pb: 5.2,
-            evEbitda: 9.5,
-            beta: 1.35,
-            freeFloat: 42,
-            liquidityDaily: 180000000,
-            fcfYield: 22.0,
-            assetTurnover: 0.92
+            pe: 12.34, roe: 66, roic: 42, dividendYield: 0,
+            netDebtToEbitda: -0.3, ebitdaMargin: 43.4, revenueGrowth: 38,
+            earningsGrowth: 52, pb: 5.2, evEbitda: 9.5, beta: 1.35,
+            freeFloat: 42, liquidityDaily: 180000000, fcfYield: 22.0, assetTurnover: 0.92
         },
-
-        performance: {
-            ytd: 58,
-            oneYear: 92,
-            threeYears: 220,
-            fiveYears: null
-        },
-
-        catalysts: [
-            "Parceria Cyrela: acesso a terrenos premium em localizações estratégicas",
-            "Candidato forte a stock split 2:1 por alto valor da ação",
-            "Expansão agressiva para 18 estados até 2026",
-            "Programa de recompra R$ 200M aprovado demonstra confiança",
-            "Margem EBITDA líder do setor 43% vs média 20%"
-        ],
-
-        risks: [
-            "Valuation premium vs. peers - múltiplos acima da média setorial",
-            "Dependência da parceria Cyrela para crescimento",
-            "Alta correlação com Selic limita upside em cenário de juros altos",
-            "Ciclicalidade inerente do setor de construção"
-        ],
-
-        keyHighlights: [
-            "ROE 66% - recorde histórico para o setor",
-            "Caixa líquido positivo - empresa sem dívida líquida",
-            "Zero dívida líquida - balanço fortaleza",
-            "Eficiência operacional top tier com ROIC 42%",
-            "ESG: Certificações ISO 14001 e 45001"
-        ],
-
-        analystConsensus: {
-            buy: 7,
-            hold: 2,
-            sell: 0
-        },
-
-        lastResults: {
-            quarter: "2Q25",
-            revenue: 1200000000,
-            netIncome: 220000000,
-            ebitda: 520800000
-        },
-
+        performance: { ytd: 58, oneYear: 92, threeYears: 220, fiveYears: null },
+        catalysts: ["Parceria Cyrela"],
+        risks: ["Valuation premium vs. peers"],
+        keyHighlights: ["ROE 66% - recorde histórico"],
+        analystConsensus: { buy: 7, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 1200000000, netIncome: 220000000, ebitda: 520800000 },
         nextEarnings: "2025-11-09",
         irWebsite: "https://ri.cury.net/",
-
-        analystTargets: {
-            consensus: {
-                mean: 45.00,
-                median: 44.00,
-                high: 52.00,
-                low: 38.00,
-                count: 9,
-                stdDev: 3.8
-            },
-            revisions: {
-                delta30d: 6.2,
-                delta90d: 10.5,
-                upgrades: 2,
-                downgrades: 0
-            },
-            impliedUpside: {
-                toMean: 36.6,
-                toMedian: 33.6,
-                dispersion: 0.12
-            }
-        },
-
-        technicalAnalysis: {
-            price: {
-                current: 32.94,
-                ma20: 33.50,
-                ma50: 31.20,
-                ma200: 28.80,
-                week52High: 38.45,
-                week52Low: 24.10
-            },
-            momentum: {
-                rsi14: 55.8,
-                macd: {
-                    value: 0.82,
-                    signal: 0.65,
-                    histogram: 0.17,
-                    trend: "BULLISH"
-                },
-                stochastic: 62.3
-            },
-            volume: {
-                avgVolume20d: 1200000,
-                ratio: 1.05,
-                accumDist: "ACCUMULATION",
-                obv: 28500000
-            },
-            signals: {
-                overallScore: 68,
-                recommendation: "BUY",
-                support: 30.50,
-                resistance: 35.80
-            }
-        },
-
-        smartMoney: {
-            insiders: {
-                last90days: {
-                    netBuys: 2,
-                    totalValue: 450000,
-                    currentPremium: 4.2
-                },
-                ownership: 28.0
-            },
-            institutional: {
-                ownership: 72.0,
-                change3m: 3.8,
-                change12m: 9.5,
-                flowTrend: "POSITIVE",
-                topHolders: ["XP Asset", "Squadra", "Ibiuna"]
-            }
-        },
-
-        mlPredictions: {
-            randomForest: {
-                prediction30d: "UP",
-                probability: 0.72,
-                expectedReturn: 7.2
-            },
-            lstm: {
-                prediction30d: "UP",
-                probability: 0.68
-            },
-            ensemble: {
-                consensus: "BUY",
-                agreement: 0.75
-            },
-            backtest: {
-                accuracy90d: 74,
-                sharpeRatio: 1.65,
-                maxDrawdown: -15.2
-            }
-        },
-
         lastUpdated: "2025-11-15T10:30:00Z",
         dataSource: "hybrid"
     },
@@ -406,230 +80,1108 @@ const COMPANIES_DATABASE = [
         sector: "Construção Civil",
         subsector: "Incorporação",
         pod: "Pod Selic",
-
         marketCap: 4850000000,
         currentPrice: 15.72,
         targetPrice: 18.76,
         upside: 19.34,
-
-        projections: {
-            target1Y: 18.76,
-            target3Y: 31.00,
-            target5Y: 42.00,
-            target10Y: 62.00
-        },
-
+        projections: { target1Y: 18.76, target3Y: 31.00, target5Y: 42.00, target10Y: 62.00 },
         score: 83,
         ranking: 3,
         recommendation: "STRONG BUY",
         source: "V1+V2",
         confidence: 80,
-
         metrics: {
-            pe: 14.22,
-            roe: 21.5,
-            roic: 18,
-            dividendYield: 12.0,
-            netDebtToEbitda: 1.5,
-            ebitdaMargin: 20,
-            revenueGrowth: 22,
-            earningsGrowth: 18,
-            pb: 2.8,
-            evEbitda: 8.5,
-            beta: 1.25,
-            freeFloat: 48,
-            liquidityDaily: 95000000,
-            fcfYield: 15.8,
-            assetTurnover: 0.78
+            pe: 14.22, roe: 21.5, roic: 18, dividendYield: 12.0,
+            netDebtToEbitda: 1.5, ebitdaMargin: 20, revenueGrowth: 22,
+            earningsGrowth: 18, pb: 2.8, evEbitda: 8.5, beta: 1.25,
+            freeFloat: 48, liquidityDaily: 95000000, fcfYield: 15.8, assetTurnover: 0.78
         },
-
-        performance: {
-            ytd: 28,
-            oneYear: 42,
-            threeYears: 85,
-            fiveYears: 180
-        },
-
-        catalysts: [
-            "Desdobramento 2:1 aprovado para aumentar liquidez",
-            "Dividend yield 12% muito atrativo para o setor",
-            "Diversificação geográfica em 15 estados reduz risco",
-            "Governança Novo Mercado desde IPO",
-            "VGV 2025: R$ 4.2B (+28% vs 2024)"
-        ],
-
-        risks: [
-            "Leverage moderada 1.5x requer monitoramento",
-            "Sensibilidade a juros impacta demanda",
-            "Competição regional em mercados menores",
-            "Execução de expansão geográfica"
-        ],
-
-        keyHighlights: [
-            "Presença nacional consolidada em 15 estados",
-            "ROE 21.5% consistente ao longo dos anos",
-            "Payout ratio 80-90% - foco em retorno ao acionista",
-            "Histórico de 35 anos no mercado",
-            "Free float 48% garante boa liquidez"
-        ],
-
-        analystConsensus: {
-            buy: 6,
-            hold: 3,
-            sell: 0
-        },
-
-        lastResults: {
-            quarter: "2Q25",
-            revenue: 1450000000,
-            netIncome: 185000000,
-            ebitda: 391500000
-        },
-
+        performance: { ytd: 28, oneYear: 42, threeYears: 85, fiveYears: 180 },
+        catalysts: ["Desdobramento 2:1 aprovado"],
+        risks: ["Leverage moderada 1.5x"],
+        keyHighlights: ["Presença nacional em 15 estados"],
+        analystConsensus: { buy: 6, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 1450000000, netIncome: 185000000, ebitda: 391500000 },
         nextEarnings: "2025-11-07",
         irWebsite: "https://ri.direcional.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
 
-        analystTargets: {
-            consensus: {
-                mean: 20.00,
-                median: 19.50,
-                high: 23.00,
-                low: 17.00,
-                count: 9,
-                stdDev: 1.8
-            },
-            revisions: {
-                delta30d: 4.5,
-                delta90d: 7.8,
-                upgrades: 1,
-                downgrades: 0
-            },
-            impliedUpside: {
-                toMean: 27.2,
-                toMedian: 24.0,
-                dispersion: 0.09
-            }
+    // ==================== IBOVESPA - GRANDES EMPRESAS ====================
+    {
+        ticker: "PETR4",
+        name: "Petrobras",
+        sector: "Petróleo e Gás",
+        subsector: "Exploração e Produção",
+        pod: "Pod Global",
+        marketCap: 425000000000,
+        currentPrice: 32.89,
+        targetPrice: 42.00,
+        upside: 27.70,
+        projections: { target1Y: 42.00, target3Y: 48.00, target5Y: 55.00, target10Y: 70.00 },
+        score: 85,
+        ranking: 4,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 82,
+        metrics: {
+            pe: 4.2, roe: 35.7, roic: 28.5, dividendYield: 14.5,
+            netDebtToEbitda: 0.8, ebitdaMargin: 48.2, revenueGrowth: 8,
+            earningsGrowth: -5, pb: 1.5, evEbitda: 2.8, beta: 1.25,
+            freeFloat: 72, liquidityDaily: 1800000000, fcfYield: 28.0, assetTurnover: 0.68
         },
+        performance: { ytd: -12, oneYear: -8, threeYears: 15, fiveYears: 250 },
+        catalysts: ["Brent >$80/barril sustenta dividendos extraordinários", "Produção pré-sal 2.2M bpd"],
+        risks: ["Risco político e interferência governamental", "Volatilidade do Brent"],
+        keyHighlights: ["ROE 35% - entre as maiores do mundo", "Dividend yield 14.5% extraordinário"],
+        analystConsensus: { buy: 15, hold: 8, sell: 2 },
+        lastResults: { quarter: "2Q25", revenue: 120000000000, netIncome: 28500000000, ebitda: 57840000000 },
+        nextEarnings: "2025-11-14",
+        irWebsite: "https://ri.petrobras.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
 
-        technicalAnalysis: {
-            price: {
-                current: 15.72,
-                ma20: 15.90,
-                ma50: 14.80,
-                ma200: 13.50,
-                week52High: 17.95,
-                week52Low: 11.20
-            },
-            momentum: {
-                rsi14: 58.5,
-                macd: {
-                    value: 0.25,
-                    signal: 0.18,
-                    histogram: 0.07,
-                    trend: "BULLISH"
-                },
-                stochastic: 60.5
-            },
-            volume: {
-                avgVolume20d: 720000,
-                ratio: 1.12,
-                accumDist: "ACCUMULATION",
-                obv: 15200000
-            },
-            signals: {
-                overallScore: 70,
-                recommendation: "BUY",
-                support: 14.20,
-                resistance: 16.80
-            }
+    {
+        ticker: "VALE3",
+        name: "Vale",
+        sector: "Mineração",
+        subsector: "Minério de Ferro",
+        pod: "Pod Global",
+        marketCap: 285000000000,
+        currentPrice: 64.78,
+        targetPrice: 71.50,
+        upside: 10.37,
+        projections: { target1Y: 71.50, target3Y: 80.00, target5Y: 92.00, target10Y: 115.00 },
+        score: 82,
+        ranking: 5,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 78,
+        metrics: {
+            pe: 5.8, roe: 18.5, roic: 15.2, dividendYield: 8.5,
+            netDebtToEbitda: 0.5, ebitdaMargin: 52.0, revenueGrowth: 5,
+            earningsGrowth: 12, pb: 1.1, evEbitda: 3.2, beta: 1.15,
+            freeFloat: 58, liquidityDaily: 850000000, fcfYield: 15.5, assetTurnover: 0.72
         },
+        performance: { ytd: 8, oneYear: 25, threeYears: 45, fiveYears: 180 },
+        catalysts: ["Preço do minério estável acima US$100/ton", "Produção 320M ton/ano"],
+        risks: ["Dependência do mercado chinês", "Volatilidade do minério"],
+        keyHighlights: ["Maior produtora de minério de ferro do mundo", "DY 8.5% atrativo"],
+        analystConsensus: { buy: 12, hold: 5, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 45000000000, netIncome: 8500000000, ebitda: 23400000000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.vale.com/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
 
-        smartMoney: {
-            insiders: {
-                last90days: {
-                    netBuys: 1,
-                    totalValue: 200000,
-                    currentPremium: 2.5
-                },
-                ownership: 22.0
-            },
-            institutional: {
-                ownership: 78.0,
-                change3m: 2.5,
-                change12m: 6.8,
-                flowTrend: "POSITIVE",
-                topHolders: ["BlackRock", "Fidelity", "Verde AM"]
-            }
+    {
+        ticker: "ITUB4",
+        name: "Itaú Unibanco",
+        sector: "Bancos",
+        subsector: "Bancos Múltiplos",
+        pod: "Pod Secular",
+        marketCap: 315000000000,
+        currentPrice: 35.21,
+        targetPrice: 45.00,
+        upside: 27.79,
+        projections: { target1Y: 45.00, target3Y: 52.00, target5Y: 62.00, target10Y: 85.00 },
+        score: 86,
+        ranking: 6,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 84,
+        metrics: {
+            pe: 9.2, roe: 22.5, roic: 18.8, dividendYield: 5.2,
+            netDebtToEbitda: null, ebitdaMargin: null, revenueGrowth: 12,
+            earningsGrowth: 15, pb: 2.1, evEbitda: null, beta: 1.05,
+            freeFloat: 52, liquidityDaily: 650000000, fcfYield: null, assetTurnover: null
         },
+        performance: { ytd: 18, oneYear: 32, threeYears: 75, fiveYears: 185 },
+        catalysts: ["Crescimento da carteira de crédito", "Eficiência operacional líder"],
+        risks: ["Sensibilidade à inadimplência", "Competição de fintechs"],
+        keyHighlights: ["Maior banco privado do Brasil", "ROE 22.5% consistente"],
+        analystConsensus: { buy: 14, hold: 6, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 28000000000, netIncome: 9200000000, ebitda: null },
+        nextEarnings: "2025-11-07",
+        irWebsite: "https://www.itau.com.br/relacoes-com-investidores/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
 
-        mlPredictions: {
-            randomForest: {
-                prediction30d: "UP",
-                probability: 0.70,
-                expectedReturn: 6.5
-            },
-            lstm: {
-                prediction30d: "NEUTRAL",
-                probability: 0.55
-            },
-            ensemble: {
-                consensus: "BUY",
-                agreement: 0.68
-            },
-            backtest: {
-                accuracy90d: 72,
-                sharpeRatio: 1.55,
-                maxDrawdown: -14.8
-            }
+    {
+        ticker: "BBDC4",
+        name: "Bradesco",
+        sector: "Bancos",
+        subsector: "Bancos Múltiplos",
+        pod: "Pod Secular",
+        marketCap: 145000000000,
+        currentPrice: 14.50,
+        targetPrice: 18.00,
+        upside: 24.14,
+        projections: { target1Y: 18.00, target3Y: 22.00, target5Y: 28.00, target10Y: 40.00 },
+        score: 78,
+        ranking: 11,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 75,
+        metrics: {
+            pe: 8.5, roe: 16.2, roic: 14.5, dividendYield: 6.8,
+            netDebtToEbitda: null, ebitdaMargin: null, revenueGrowth: 8,
+            earningsGrowth: 10, pb: 1.4, evEbitda: null, beta: 1.12,
+            freeFloat: 58, liquidityDaily: 420000000, fcfYield: null, assetTurnover: null
         },
+        performance: { ytd: 5, oneYear: 12, threeYears: 35, fiveYears: 95 },
+        catalysts: ["Reestruturação em andamento", "Redução de custos"],
+        risks: ["Pressão sobre margens", "Qualidade da carteira"],
+        keyHighlights: ["2º maior banco privado", "DY atrativo 6.8%"],
+        analystConsensus: { buy: 8, hold: 9, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 24000000000, netIncome: 5200000000, ebitda: null },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://www.bradescori.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
 
+    {
+        ticker: "WEGE3",
+        name: "WEG",
+        sector: "Bens de Capital",
+        subsector: "Equipamentos Elétricos",
+        pod: "Pod Secular",
+        marketCap: 68000000000,
+        currentPrice: 36.17,
+        targetPrice: 49.00,
+        upside: 35.47,
+        projections: { target1Y: 49.00, target3Y: 62.00, target5Y: 82.00, target10Y: 130.00 },
+        score: 92,
+        ranking: 1,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 90,
+        metrics: {
+            pe: 28.5, roe: 30.5, roic: 25.8, dividendYield: 1.2,
+            netDebtToEbitda: -0.5, ebitdaMargin: 20.1, revenueGrowth: 22,
+            earningsGrowth: 28, pb: 8.7, evEbitda: 22.5, beta: 0.95,
+            freeFloat: 52, liquidityDaily: 280000000, fcfYield: 3.8, assetTurnover: 1.12
+        },
+        performance: { ytd: 48, oneYear: 85, threeYears: 220, fiveYears: 450 },
+        catalysts: ["Transição energética global", "Receita crescendo >20% a.a."],
+        risks: ["Valuation premium (P/L 28x)", "Competição chinesa"],
+        keyHighlights: ["ROE 30% excepcional", "Crescimento secular"],
+        analystConsensus: { buy: 18, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 9200000000, netIncome: 1250000000, ebitda: 1849200000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.weg.net/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "MGLU3",
+        name: "Magazine Luiza",
+        sector: "Varejo",
+        subsector: "E-commerce",
+        pod: "Pod Secular",
+        marketCap: 28000000000,
+        currentPrice: 8.38,
+        targetPrice: 14.00,
+        upside: 67.06,
+        projections: { target1Y: 14.00, target3Y: 20.00, target5Y: 28.00, target10Y: 45.00 },
+        score: 72,
+        ranking: 14,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 68,
+        metrics: {
+            pe: 18.5, roe: 12.8, roic: 10.5, dividendYield: 0,
+            netDebtToEbitda: 1.8, ebitdaMargin: 8.5, revenueGrowth: 18,
+            earningsGrowth: 25, pb: 2.4, evEbitda: 12.0, beta: 1.65,
+            freeFloat: 62, liquidityDaily: 185000000, fcfYield: 5.2, assetTurnover: 1.85
+        },
+        performance: { ytd: 59, oneYear: 85, threeYears: -45, fiveYears: 120 },
+        catalysts: ["Recuperação de margens", "Integração omnichannel"],
+        risks: ["Competição acirrada", "Queima de caixa histórica"],
+        keyHighlights: ["Líder em e-commerce nacional", "Recuperação em andamento"],
+        analystConsensus: { buy: 10, hold: 5, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 14500000000, netIncome: 285000000, ebitda: 1232500000 },
+        nextEarnings: "2025-11-12",
+        irWebsite: "https://ri.magazineluiza.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "BBAS3",
+        name: "Banco do Brasil",
+        sector: "Bancos",
+        subsector: "Bancos Múltiplos",
+        pod: "Pod Secular",
+        marketCap: 110000000000,
+        currentPrice: 22.48,
+        targetPrice: 30.00,
+        upside: 33.45,
+        projections: { target1Y: 30.00, target3Y: 36.00, target5Y: 45.00, target10Y: 65.00 },
+        score: 80,
+        ranking: 9,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 76,
+        metrics: {
+            pe: 7.2, roe: 18.5, roic: 16.2, dividendYield: 7.2,
+            netDebtToEbitda: null, ebitdaMargin: null, revenueGrowth: 10,
+            earningsGrowth: 12, pb: 1.3, evEbitda: null, beta: 1.08,
+            freeFloat: 48, liquidityDaily: 380000000, fcfYield: null, assetTurnover: null
+        },
+        performance: { ytd: 15, oneYear: 28, threeYears: 58, fiveYears: 145 },
+        catalysts: ["Liderança no agronegócio", "Expansão de crédito"],
+        risks: ["Exposição ao setor público", "Competição bancária"],
+        keyHighlights: ["Maior banco em ativos", "DY 7.2% atrativo"],
+        analystConsensus: { buy: 11, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 26000000000, netIncome: 8500000000, ebitda: null },
+        nextEarnings: "2025-11-09",
+        irWebsite: "https://ri.bb.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "SUZB3",
+        name: "Suzano",
+        sector: "Papel e Celulose",
+        subsector: "Commodities",
+        pod: "Pod Global",
+        marketCap: 65000000000,
+        currentPrice: 48.55,
+        targetPrice: 60.00,
+        upside: 23.58,
+        projections: { target1Y: 60.00, target3Y: 72.00, target5Y: 88.00, target10Y: 120.00 },
+        score: 85,
+        ranking: 4,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 82,
+        metrics: {
+            pe: 18.2, roe: 15.8, roic: 12.5, dividendYield: 2.8,
+            netDebtToEbitda: 2.8, ebitdaMargin: 45.0, revenueGrowth: 12,
+            earningsGrowth: 25, pb: 2.9, evEbitda: 8.5, beta: 0.85,
+            freeFloat: 68, liquidityDaily: 380000000, fcfYield: 8.5, assetTurnover: 0.55
+        },
+        performance: { ytd: -8, oneYear: 12, threeYears: 35, fiveYears: 180 },
+        catalysts: ["Preço da celulose em recuperação", "Projeto Cerrado: +2.5M ton"],
+        risks: ["Volatilidade da celulose", "Capex intensivo"],
+        keyHighlights: ["Maior produtora de celulose do mundo", "4.2M ton capacidade"],
+        analystConsensus: { buy: 12, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 9800000000, netIncome: 1250000000, ebitda: 4410000000 },
+        nextEarnings: "2025-11-07",
+        irWebsite: "https://ri.suzano.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "GGBR4",
+        name: "Gerdau",
+        sector: "Siderurgia",
+        subsector: "Aços Longos",
+        pod: "Pod Global",
+        marketCap: 29000000000,
+        currentPrice: 17.18,
+        targetPrice: 22.65,
+        upside: 31.83,
+        projections: { target1Y: 22.65, target3Y: 28.00, target5Y: 35.00, target10Y: 50.00 },
+        score: 76,
+        ranking: 12,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 72,
+        metrics: {
+            pe: 8.5, roe: 16.8, roic: 14.2, dividendYield: 4.5,
+            netDebtToEbitda: 1.2, ebitdaMargin: 18.5, revenueGrowth: 8,
+            earningsGrowth: 15, pb: 1.4, evEbitda: 5.8, beta: 1.35,
+            freeFloat: 55, liquidityDaily: 220000000, fcfYield: 10.5, assetTurnover: 0.88
+        },
+        performance: { ytd: 22, oneYear: 35, threeYears: 58, fiveYears: 125 },
+        catalysts: ["Recuperação da construção civil", "Exportações fortes"],
+        risks: ["Ciclo de commodities", "Competição chinesa"],
+        keyHighlights: ["Presença global", "Líder em aços longos"],
+        analystConsensus: { buy: 10, hold: 5, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 18000000000, netIncome: 2100000000, ebitda: 3330000000 },
+        nextEarnings: "2025-11-10",
+        irWebsite: "https://ri.gerdau.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "B3SA3",
+        name: "B3",
+        sector: "Serviços Financeiros",
+        subsector: "Bolsa de Valores",
+        pod: "Pod Selic",
+        marketCap: 85000000000,
+        currentPrice: 15.67,
+        targetPrice: 18.50,
+        upside: 18.06,
+        projections: { target1Y: 18.50, target3Y: 21.00, target5Y: 24.00, target10Y: 30.00 },
+        score: 75,
+        ranking: 9,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 74,
+        metrics: {
+            pe: 16.8, roe: 20.2, roic: 18.5, dividendYield: 5.2,
+            netDebtToEbitda: 1.5, ebitdaMargin: 72.0, revenueGrowth: 8,
+            earningsGrowth: 12, pb: 3.4, evEbitda: 11.2, beta: 1.1,
+            freeFloat: 78, liquidityDaily: 450000000, fcfYield: 6.8, assetTurnover: 0.42
+        },
+        performance: { ytd: -5, oneYear: 8, threeYears: 25, fiveYears: 120 },
+        catalysts: ["Monopólio natural", "Diversificação de produtos"],
+        risks: ["Risco regulatório", "Competição de fintechs"],
+        keyHighlights: ["Única bolsa do Brasil", "ROE 20% consistente"],
+        analystConsensus: { buy: 8, hold: 4, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 1850000000, netIncome: 980000000, ebitda: 1332000000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.b3.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "ABEV3",
+        name: "Ambev",
+        sector: "Bebidas",
+        subsector: "Cervejas",
+        pod: "Pod Secular",
+        marketCap: 215000000000,
+        currentPrice: 13.50,
+        targetPrice: 16.50,
+        upside: 22.22,
+        projections: { target1Y: 16.50, target3Y: 19.00, target5Y: 23.00, target10Y: 32.00 },
+        score: 81,
+        ranking: 8,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 79,
+        metrics: {
+            pe: 16.2, roe: 28.5, roic: 24.2, dividendYield: 3.8,
+            netDebtToEbitda: 0.8, ebitdaMargin: 35.5, revenueGrowth: 6,
+            earningsGrowth: 10, pb: 4.6, evEbitda: 12.5, beta: 0.88,
+            freeFloat: 55, liquidityDaily: 520000000, fcfYield: 6.2, assetTurnover: 0.68
+        },
+        performance: { ytd: 12, oneYear: 22, threeYears: 45, fiveYears: 95 },
+        catalysts: ["Recuperação do volume", "Premiumização"],
+        risks: ["Competição", "Mudança de hábitos"],
+        keyHighlights: ["Líder absoluta em cervejas", "ROE 28.5%"],
+        analystConsensus: { buy: 9, hold: 6, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 16000000000, netIncome: 3500000000, ebitda: 5680000000 },
+        nextEarnings: "2025-11-11",
+        irWebsite: "https://ri.ambev.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "ELET3",
+        name: "Eletrobras",
+        sector: "Energia Elétrica",
+        subsector: "Geração",
+        pod: "Pod Selic",
+        marketCap: 75000000000,
+        currentPrice: 50.00,
+        targetPrice: 56.65,
+        upside: 13.30,
+        projections: { target1Y: 56.65, target3Y: 65.00, target5Y: 75.00, target10Y: 95.00 },
+        score: 79,
+        ranking: 10,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 76,
+        metrics: {
+            pe: 12.5, roe: 14.8, roic: 11.5, dividendYield: 4.2,
+            netDebtToEbitda: 2.2, ebitdaMargin: 42.0, revenueGrowth: 8,
+            earningsGrowth: 15, pb: 1.9, evEbitda: 7.5, beta: 0.95,
+            freeFloat: 72, liquidityDaily: 285000000, fcfYield: 7.8, assetTurnover: 0.45
+        },
+        performance: { ytd: 10, oneYear: 18, threeYears: 145, fiveYears: 280 },
+        catalysts: ["Pós-privatização", "Eficiência operacional"],
+        risks: ["Regulação do setor", "Hidrologia"],
+        keyHighlights: ["Maior geradora da América Latina", "Privatizada em 2022"],
+        analystConsensus: { buy: 12, hold: 4, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 12000000000, netIncome: 2500000000, ebitda: 5040000000 },
+        nextEarnings: "2025-11-09",
+        irWebsite: "https://eletrobras.com/ri/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "EMBR3",
+        name: "Embraer",
+        sector: "Aeronáutica",
+        subsector: "Aeronaves",
+        pod: "Pod Secular",
+        marketCap: 48000000000,
+        currentPrice: 66.21,
+        targetPrice: 76.50,
+        upside: 15.54,
+        projections: { target1Y: 76.50, target3Y: 92.00, target5Y: 115.00, target10Y: 165.00 },
+        score: 84,
+        ranking: 7,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 81,
+        metrics: {
+            pe: 22.5, roe: 26.8, roic: 22.5, dividendYield: 1.2,
+            netDebtToEbitda: 0.2, ebitdaMargin: 14.5, revenueGrowth: 28,
+            earningsGrowth: 45, pb: 6.0, evEbitda: 18.5, beta: 1.25,
+            freeFloat: 52, liquidityDaily: 195000000, fcfYield: 4.5, assetTurnover: 0.95
+        },
+        performance: { ytd: 82, oneYear: 125, threeYears: 385, fiveYears: 650 },
+        catalysts: ["Backlog recorde US$ 23B", "E2 Jets forte demanda"],
+        risks: ["Ciclo de aviação", "Dependência de fornecedores"],
+        keyHighlights: ["3ª maior fabricante de jatos", "Crescimento excepcional"],
+        analystConsensus: { buy: 16, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 8500000000, netIncome: 1250000000, ebitda: 1232500000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.embraer.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "RAIL3",
+        name: "Rumo",
+        sector: "Transporte",
+        subsector: "Ferrovias",
+        pod: "Pod Secular",
+        marketCap: 33000000000,
+        currentPrice: 18.00,
+        targetPrice: 24.13,
+        upside: 34.06,
+        projections: { target1Y: 24.13, target3Y: 30.00, target5Y: 38.00, target10Y: 55.00 },
+        score: 77,
+        ranking: 11,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 73,
+        metrics: {
+            pe: 15.5, roe: 18.2, roic: 15.5, dividendYield: 2.8,
+            netDebtToEbitda: 2.8, ebitdaMargin: 52.0, revenueGrowth: 12,
+            earningsGrowth: 18, pb: 2.8, evEbitda: 9.5, beta: 1.15,
+            freeFloat: 58, liquidityDaily: 165000000, fcfYield: 6.5, assetTurnover: 0.42
+        },
+        performance: { ytd: 15, oneYear: 28, threeYears: 85, fiveYears: 220 },
+        catalysts: ["Renovação da concessão", "Expansão de capacidade"],
+        risks: ["Regulação", "Capex elevado"],
+        keyHighlights: ["Maior ferrovia do Brasil", "Margem EBITDA 52%"],
+        analystConsensus: { buy: 12, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 4800000000, netIncome: 850000000, ebitda: 2496000000 },
+        nextEarnings: "2025-11-10",
+        irWebsite: "https://ri.rumolog.com/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CSAN3",
+        name: "Cosan",
+        sector: "Energia",
+        subsector: "Diversificado",
+        pod: "Pod Global",
+        marketCap: 22000000000,
+        currentPrice: 6.07,
+        targetPrice: 12.00,
+        upside: 97.69,
+        projections: { target1Y: 12.00, target3Y: 16.00, target5Y: 22.00, target10Y: 35.00 },
+        score: 74,
+        ranking: 13,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 70,
+        metrics: {
+            pe: 12.5, roe: 12.5, roic: 10.2, dividendYield: 3.2,
+            netDebtToEbitda: 3.5, ebitdaMargin: 22.0, revenueGrowth: 10,
+            earningsGrowth: 18, pb: 1.6, evEbitda: 8.5, beta: 1.45,
+            freeFloat: 48, liquidityDaily: 125000000, fcfYield: 5.8, assetTurnover: 0.68
+        },
+        performance: { ytd: 28, oneYear: 45, threeYears: -25, fiveYears: 35 },
+        catalysts: ["Valorização de ativos", "Possível spin-off"],
+        risks: ["Alta alavancagem", "Complexidade da estrutura"],
+        keyHighlights: ["Holding diversificada", "Upside 97% segundo consenso"],
+        analystConsensus: { buy: 9, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 42000000000, netIncome: 650000000, ebitda: 9240000000 },
+        nextEarnings: "2025-11-12",
+        irWebsite: "https://ri.cosan.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    // ==================== IBOVESPA ADICIONAIS ====================
+
+    {
+        ticker: "GOLL4",
+        name: "Gol Linhas Aéreas",
+        sector: "Transporte",
+        subsector: "Aéreo",
+        pod: "Pod Sell",
+        marketCap: 1200000000,
+        currentPrice: 1.85,
+        targetPrice: 0.28,
+        upside: -84.86,
+        projections: { target1Y: 0.28, target3Y: 0.15, target5Y: 0.10, target10Y: 0.05 },
+        score: 15,
+        ranking: 19,
+        recommendation: "SELL",
+        source: "V2",
+        confidence: 85,
+        metrics: {
+            pe: -2.5, roe: -85, roic: -45, dividendYield: 0,
+            netDebtToEbitda: 12.5, ebitdaMargin: -8.5, revenueGrowth: -15,
+            earningsGrowth: -180, pb: 0.25, evEbitda: -5.2, beta: 2.8,
+            freeFloat: 78, liquidityDaily: 85000000, fcfYield: -25, assetTurnover: 1.2
+        },
+        performance: { ytd: -72, oneYear: -85, threeYears: -92, fiveYears: -95 },
+        catalysts: ["Recuperação judicial em andamento", "Reestruturação de dívida"],
+        risks: ["Altíssima alavancagem", "Chapter 11 nos EUA", "Destruição de valor aos acionistas", "Possível falência"],
+        keyHighlights: ["⚠️ EVITAR - Empresa em recuperação judicial", "Analistas recomendam venda"],
+        analystConsensus: { buy: 0, hold: 1, sell: 12 },
+        lastResults: { quarter: "2Q25", revenue: 3200000000, netIncome: -850000000, ebitda: -270000000 },
+        nextEarnings: "2025-11-20",
+        irWebsite: "https://ri.voegol.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "BRFS3",
+        name: "BRF S.A.",
+        sector: "Alimentos",
+        subsector: "Proteínas",
+        pod: "Pod Global",
+        marketCap: 18500000000,
+        currentPrice: 22.85,
+        targetPrice: 28.50,
+        upside: 24.73,
+        projections: { target1Y: 28.50, target3Y: 38.00, target5Y: 48.00, target10Y: 72.00 },
+        score: 72,
+        ranking: 14,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 75,
+        metrics: {
+            pe: 18.5, roe: 8.5, roic: 6.2, dividendYield: 1.8,
+            netDebtToEbitda: 2.8, ebitdaMargin: 11.5, revenueGrowth: 8.5,
+            earningsGrowth: 22, pb: 1.6, evEbitda: 9.2, beta: 1.35,
+            freeFloat: 65, liquidityDaily: 95000000, fcfYield: 4.5, assetTurnover: 1.45
+        },
+        performance: { ytd: 18, oneYear: 28, threeYears: 15, fiveYears: 45 },
+        catalysts: ["Recuperação de margens", "Expansão internacional", "Aumento de preços"],
+        risks: ["Volatilidade cambial", "Preço de commodities", "Competição acirrada"],
+        keyHighlights: ["Líder em proteínas", "Exposição ao mercado global"],
+        analystConsensus: { buy: 8, hold: 5, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 14200000000, netIncome: 420000000, ebitda: 1633000000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.brf-global.com/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "JBSS3",
+        name: "JBS S.A.",
+        sector: "Alimentos",
+        subsector: "Proteínas",
+        pod: "Pod Global",
+        marketCap: 85000000000,
+        currentPrice: 32.45,
+        targetPrice: 42.00,
+        upside: 29.43,
+        projections: { target1Y: 42.00, target3Y: 55.00, target5Y: 68.00, target10Y: 95.00 },
+        score: 78,
+        ranking: 15,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 80,
+        metrics: {
+            pe: 9.8, roe: 18.5, roic: 12.5, dividendYield: 2.5,
+            netDebtToEbitda: 2.1, ebitdaMargin: 9.8, revenueGrowth: 12.5,
+            earningsGrowth: 25, pb: 1.8, evEbitda: 6.5, beta: 1.25,
+            freeFloat: 58, liquidityDaily: 180000000, fcfYield: 8.5, assetTurnover: 1.85
+        },
+        performance: { ytd: 32, oneYear: 48, threeYears: 85, fiveYears: 120 },
+        catalysts: ["Maior processadora de proteínas do mundo", "Expansão nos EUA", "Aquisições estratégicas"],
+        risks: ["Volatilidade cambial", "Questões ESG", "Riscos regulatórios"],
+        keyHighlights: ["Líder global em proteínas", "Diversificação geográfica"],
+        analystConsensus: { buy: 12, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 92000000000, netIncome: 2800000000, ebitda: 9016000000 },
+        nextEarnings: "2025-11-13",
+        irWebsite: "https://ri.jbs.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CPFE3",
+        name: "CPFL Energia",
+        sector: "Energia Elétrica",
+        subsector: "Distribuição",
+        pod: "Pod Selic",
+        marketCap: 24000000000,
+        currentPrice: 33.20,
+        targetPrice: 38.50,
+        upside: 15.96,
+        projections: { target1Y: 38.50, target3Y: 45.00, target5Y: 52.00, target10Y: 68.00 },
+        score: 70,
+        ranking: 16,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 78,
+        metrics: {
+            pe: 11.5, roe: 14.5, roic: 9.8, dividendYield: 6.8,
+            netDebtToEbitda: 2.2, ebitdaMargin: 21.5, revenueGrowth: 6.5,
+            earningsGrowth: 8.5, pb: 1.7, evEbitda: 7.8, beta: 0.75,
+            freeFloat: 42, liquidityDaily: 55000000, fcfYield: 7.5, assetTurnover: 0.52
+        },
+        performance: { ytd: 12, oneYear: 18, threeYears: 25, fiveYears: 42 },
+        catalysts: ["Dividend yield atrativo", "Regulação favorável", "Investimentos em renováveis"],
+        risks: ["Risco regulatório", "Risco hidrológico", "Mudanças na tarifa"],
+        keyHighlights: ["DY 6.8%", "Setor regulado e estável"],
+        analystConsensus: { buy: 7, hold: 5, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 8900000000, netIncome: 780000000, ebitda: 1914000000 },
+        nextEarnings: "2025-11-07",
+        irWebsite: "https://ri.cpfl.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CCRO3",
+        name: "CCR S.A.",
+        sector: "Transporte",
+        subsector: "Concessões Rodoviárias",
+        pod: "Pod Secular",
+        marketCap: 22000000000,
+        currentPrice: 12.85,
+        targetPrice: 16.00,
+        upside: 24.51,
+        projections: { target1Y: 16.00, target3Y: 20.00, target5Y: 24.00, target10Y: 32.00 },
+        score: 74,
+        ranking: 17,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 76,
+        metrics: {
+            pe: 14.2, roe: 11.5, roic: 8.5, dividendYield: 4.2,
+            netDebtToEbitda: 3.5, ebitdaMargin: 45.5, revenueGrowth: 9.5,
+            earningsGrowth: 12, pb: 1.6, evEbitda: 9.5, beta: 0.95,
+            freeFloat: 68, liquidityDaily: 85000000, fcfYield: 6.2, assetTurnover: 0.38
+        },
+        performance: { ytd: 15, oneYear: 22, threeYears: 18, fiveYears: 35 },
+        catalysts: ["Retomada do tráfego", "Novos contratos de concessão", "Mobilidade urbana"],
+        risks: ["Risco regulatório", "Renovação de concessões", "Competição"],
+        keyHighlights: ["Maior concessionária de infraestrutura do Brasil", "Diversificação de ativos"],
+        analystConsensus: { buy: 9, hold: 4, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 4200000000, netIncome: 380000000, ebitda: 1911000000 },
+        nextEarnings: "2025-11-14",
+        irWebsite: "https://ri.ccr.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "RADL3",
+        name: "Raia Drogasil",
+        sector: "Varejo",
+        subsector: "Farmácias",
+        pod: "Pod Secular",
+        marketCap: 42000000000,
+        currentPrice: 24.15,
+        targetPrice: 32.00,
+        upside: 32.51,
+        projections: { target1Y: 32.00, target3Y: 42.00, target5Y: 52.00, target10Y: 75.00 },
+        score: 82,
+        ranking: 18,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 82,
+        metrics: {
+            pe: 22.5, roe: 18.5, roic: 14.2, dividendYield: 1.5,
+            netDebtToEbitda: 0.8, ebitdaMargin: 8.5, revenueGrowth: 14.5,
+            earningsGrowth: 18, pb: 4.2, evEbitda: 15.5, beta: 0.85,
+            freeFloat: 72, liquidityDaily: 92000000, fcfYield: 5.5, assetTurnover: 2.15
+        },
+        performance: { ytd: 25, oneYear: 38, threeYears: 65, fiveYears: 95 },
+        catalysts: ["Expansão de lojas", "Digitalização", "Envelhecimento populacional"],
+        risks: ["Competição intensa", "Pressão de margens", "Mudanças regulatórias"],
+        keyHighlights: ["Líder em varejo farmacêutico", "Crescimento consistente", "Tese demográfica forte"],
+        analystConsensus: { buy: 11, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 9800000000, netIncome: 420000000, ebitda: 833000000 },
+        nextEarnings: "2025-11-12",
+        irWebsite: "https://ri.rd.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "FLRY3",
+        name: "Fleury S.A.",
+        sector: "Saúde",
+        subsector: "Diagnóstico",
+        pod: "Pod Secular",
+        marketCap: 7500000000,
+        currentPrice: 13.45,
+        targetPrice: 18.50,
+        upside: 37.55,
+        projections: { target1Y: 18.50, target3Y: 24.00, target5Y: 30.00, target10Y: 42.00 },
+        score: 76,
+        ranking: 20,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 74,
+        metrics: {
+            pe: 28.5, roe: 9.5, roic: 6.8, dividendYield: 2.2,
+            netDebtToEbitda: 1.5, ebitdaMargin: 18.5, revenueGrowth: 11.5,
+            earningsGrowth: 15, pb: 2.7, evEbitda: 12.8, beta: 0.75,
+            freeFloat: 58, liquidityDaily: 28000000, fcfYield: 4.2, assetTurnover: 0.85
+        },
+        performance: { ytd: 8, oneYear: 15, threeYears: 5, fiveYears: 22 },
+        catalysts: ["Consolidação do setor", "Envelhecimento populacional", "Medicina preventiva"],
+        risks: ["Competição regional", "Mudanças na ANS", "Pressão de custos"],
+        keyHighlights: ["Líder em medicina diagnóstica", "Marca forte", "Expansão geográfica"],
+        analystConsensus: { buy: 8, hold: 4, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 1200000000, netIncome: 85000000, ebitda: 222000000 },
+        nextEarnings: "2025-11-15",
+        irWebsite: "https://ri.fleury.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "HYPE3",
+        name: "Hypera Pharma",
+        sector: "Saúde",
+        subsector: "Farmacêutica",
+        pod: "Pod Secular",
+        marketCap: 18000000000,
+        currentPrice: 26.80,
+        targetPrice: 36.00,
+        upside: 34.33,
+        projections: { target1Y: 36.00, target3Y: 48.00, target5Y: 60.00, target10Y: 85.00 },
+        score: 79,
+        ranking: 21,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 77,
+        metrics: {
+            pe: 16.5, roe: 25.5, roic: 18.2, dividendYield: 3.8,
+            netDebtToEbitda: 1.2, ebitdaMargin: 24.5, revenueGrowth: 9.5,
+            earningsGrowth: 14, pb: 4.2, evEbitda: 9.5, beta: 0.65,
+            freeFloat: 78, liquidityDaily: 65000000, fcfYield: 8.5, assetTurnover: 0.95
+        },
+        performance: { ytd: 22, oneYear: 35, threeYears: 48, fiveYears: 72 },
+        catalysts: ["Portfólio de marcas líderes", "Envelhecimento populacional", "Lançamentos"],
+        risks: ["Regulação de preços", "Genéricos", "Competição"],
+        keyHighlights: ["Líder em farmacêutica OTC", "ROE 25.5%", "Geração de caixa forte"],
+        analystConsensus: { buy: 10, hold: 3, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 2100000000, netIncome: 340000000, ebitda: 515000000 },
+        nextEarnings: "2025-11-11",
+        irWebsite: "https://ri.hypera.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "VIVT3",
+        name: "Telefônica Brasil (Vivo)",
+        sector: "Telecomunicações",
+        subsector: "Telecom",
+        pod: "Pod Secular",
+        marketCap: 85000000000,
+        currentPrice: 50.25,
+        targetPrice: 58.00,
+        upside: 15.42,
+        projections: { target1Y: 58.00, target3Y: 68.00, target5Y: 78.00, target10Y: 98.00 },
+        score: 68,
+        ranking: 22,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 72,
+        metrics: {
+            pe: 13.8, roe: 18.5, roic: 12.5, dividendYield: 5.5,
+            netDebtToEbitda: 0.9, ebitdaMargin: 42.5, revenueGrowth: 4.5,
+            earningsGrowth: 6.5, pb: 2.5, evEbitda: 5.8, beta: 0.55,
+            freeFloat: 33, liquidityDaily: 125000000, fcfYield: 9.5, assetTurnover: 0.42
+        },
+        performance: { ytd: 8, oneYear: 14, threeYears: 22, fiveYears: 38 },
+        catalysts: ["Liderança em 5G", "Dividend yield atrativo", "Fibra óptica"],
+        risks: ["Competição intensa", "Regulação", "Saturação do mercado"],
+        keyHighlights: ["DY 5.5%", "Líder em telecom", "Geração de caixa robusta"],
+        analystConsensus: { buy: 7, hold: 6, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 13500000000, netIncome: 1450000000, ebitda: 5738000000 },
+        nextEarnings: "2025-11-13",
+        irWebsite: "https://ri.telefonica.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CMIG4",
+        name: "Cemig",
+        sector: "Energia Elétrica",
+        subsector: "Distribuição",
+        pod: "Pod Selic",
+        marketCap: 20000000000,
+        currentPrice: 10.15,
+        targetPrice: 12.50,
+        upside: 23.15,
+        projections: { target1Y: 12.50, target3Y: 15.00, target5Y: 18.00, target10Y: 24.00 },
+        score: 67,
+        ranking: 23,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 70,
+        metrics: {
+            pe: 9.5, roe: 11.2, roic: 7.5, dividendYield: 7.8,
+            netDebtToEbitda: 2.5, ebitdaMargin: 28.5, revenueGrowth: 5.5,
+            earningsGrowth: 8, pb: 1.1, evEbitda: 6.5, beta: 0.85,
+            freeFloat: 67, liquidityDaily: 95000000, fcfYield: 10.5, assetTurnover: 0.48
+        },
+        performance: { ytd: 5, oneYear: 12, threeYears: 8, fiveYears: 18 },
+        catalysts: ["DY 7.8% - muito atrativo", "Privatização em discussão", "Venda de ativos"],
+        risks: ["Risco político (Minas Gerais)", "Endividamento", "Regulação"],
+        keyHighlights: ["DY excepcional", "Setor regulado"],
+        analystConsensus: { buy: 6, hold: 6, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 8200000000, netIncome: 620000000, ebitda: 2337000000 },
+        nextEarnings: "2025-11-14",
+        irWebsite: "https://ri.cemig.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "EQTL3",
+        name: "Equatorial Energia",
+        sector: "Energia Elétrica",
+        subsector: "Distribuição",
+        pod: "Pod Selic",
+        marketCap: 45000000000,
+        currentPrice: 35.80,
+        targetPrice: 44.00,
+        upside: 22.91,
+        projections: { target1Y: 44.00, target3Y: 55.00, target5Y: 68.00, target10Y: 92.00 },
+        score: 83,
+        ranking: 24,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 84,
+        metrics: {
+            pe: 15.2, roe: 22.5, roic: 16.8, dividendYield: 4.2,
+            netDebtToEbitda: 2.8, ebitdaMargin: 32.5, revenueGrowth: 18.5,
+            earningsGrowth: 24, pb: 3.4, evEbitda: 9.8, beta: 0.75,
+            freeFloat: 55, liquidityDaily: 115000000, fcfYield: 7.8, assetTurnover: 0.55
+        },
+        performance: { ytd: 28, oneYear: 42, threeYears: 85, fiveYears: 185 },
+        catalysts: ["Melhor gestora de energia do Brasil", "Aquisições estratégicas", "Eficiência operacional"],
+        risks: ["Risco regulatório", "Integração de aquisições", "Exposição ao Nordeste"],
+        keyHighlights: ["ROE 22.5% - excepcional", "Track record de aquisições", "Crescimento acima do setor"],
+        analystConsensus: { buy: 13, hold: 2, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 7800000000, netIncome: 980000000, ebitda: 2535000000 },
+        nextEarnings: "2025-11-09",
+        irWebsite: "https://ri.equatorialenergia.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CPLE6",
+        name: "Copel",
+        sector: "Energia Elétrica",
+        subsector: "Geração e Distribuição",
+        pod: "Pod Selic",
+        marketCap: 18000000000,
+        currentPrice: 6.58,
+        targetPrice: 8.50,
+        upside: 29.18,
+        projections: { target1Y: 8.50, target3Y: 10.50, target5Y: 13.00, target10Y: 18.00 },
+        score: 71,
+        ranking: 25,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 73,
+        metrics: {
+            pe: 8.2, roe: 15.5, roic: 10.2, dividendYield: 8.5,
+            netDebtToEbitda: 1.8, ebitdaMargin: 35.5, revenueGrowth: 7.5,
+            earningsGrowth: 12, pb: 1.3, evEbitda: 5.8, beta: 0.72,
+            freeFloat: 51, liquidityDaily: 42000000, fcfYield: 11.5, assetTurnover: 0.52
+        },
+        performance: { ytd: 18, oneYear: 28, threeYears: 35, fiveYears: 52 },
+        catalysts: ["DY 8.5% - excelente", "Privatização em discussão", "Geração renovável"],
+        risks: ["Risco político (Paraná)", "Questões regulatórias", "Hidrologia"],
+        keyHighlights: ["DY altíssimo", "Mix geração + distribuição"],
+        analystConsensus: { buy: 8, hold: 4, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 5200000000, netIncome: 540000000, ebitda: 1846000000 },
+        nextEarnings: "2025-11-08",
+        irWebsite: "https://ri.copel.com/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "CSNA3",
+        name: "CSN (Companhia Siderúrgica Nacional)",
+        sector: "Siderurgia e Metalurgia",
+        subsector: "Siderurgia",
+        pod: "Pod Global",
+        marketCap: 22000000000,
+        currentPrice: 15.82,
+        targetPrice: 21.00,
+        upside: 32.74,
+        projections: { target1Y: 21.00, target3Y: 28.00, target5Y: 35.00, target10Y: 48.00 },
+        score: 69,
+        ranking: 26,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 68,
+        metrics: {
+            pe: 8.5, roe: 12.5, roic: 8.8, dividendYield: 3.2,
+            netDebtToEbitda: 2.2, ebitdaMargin: 28.5, revenueGrowth: 6.5,
+            earningsGrowth: 15, pb: 1.1, evEbitda: 5.5, beta: 1.55,
+            freeFloat: 62, liquidityDaily: 125000000, fcfYield: 7.5, assetTurnover: 0.75
+        },
+        performance: { ytd: -8, oneYear: 5, threeYears: -15, fiveYears: 12 },
+        catalysts: ["Ciclo de commodities", "Exportações", "Verticalização (mineração)"],
+        risks: ["Volatilidade de commodities", "Competição chinesa", "Endividamento"],
+        keyHighlights: ["Integração vertical forte", "Exposição a commodities metálicas"],
+        analystConsensus: { buy: 7, hold: 5, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 10500000000, netIncome: 680000000, ebitda: 2993000000 },
+        nextEarnings: "2025-11-12",
+        irWebsite: "https://ri.csn.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "ITSA4",
+        name: "Itaúsa",
+        sector: "Holdings",
+        subsector: "Holdings Diversificadas",
+        pod: "Pod Secular",
+        marketCap: 95000000000,
+        currentPrice: 9.25,
+        targetPrice: 11.50,
+        upside: 24.32,
+        projections: { target1Y: 11.50, target3Y: 14.00, target5Y: 17.00, target10Y: 23.00 },
+        score: 75,
+        ranking: 27,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 77,
+        metrics: {
+            pe: 6.8, roe: 16.5, roic: 12.2, dividendYield: 5.8,
+            netDebtToEbitda: -0.5, ebitdaMargin: 0, revenueGrowth: 0,
+            earningsGrowth: 12, pb: 1.1, evEbitda: 0, beta: 0.95,
+            freeFloat: 55, liquidityDaily: 185000000, fcfYield: 0, assetTurnover: 0
+        },
+        performance: { ytd: 12, oneYear: 18, threeYears: 25, fiveYears: 42 },
+        catalysts: ["Desconto de holding", "Exposição ao Itaú", "DY atrativo"],
+        risks: ["Desconto persistente", "Concentração em financeiro", "Liquidez"],
+        keyHighlights: ["DY 5.8%", "Proxy para ITUB4 com desconto", "Diversificação"],
+        analystConsensus: { buy: 9, hold: 5, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 0, netIncome: 3200000000, ebitda: 0 },
+        nextEarnings: "2025-11-07",
+        irWebsite: "https://www.itausa.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "PRIO3",
+        name: "PetroRio",
+        sector: "Petróleo e Gás",
+        subsector: "Exploração e Produção",
+        pod: "Pod Global",
+        marketCap: 38000000000,
+        currentPrice: 42.15,
+        targetPrice: 56.00,
+        upside: 32.86,
+        projections: { target1Y: 56.00, target3Y: 72.00, target5Y: 88.00, target10Y: 115.00 },
+        score: 85,
+        ranking: 28,
+        recommendation: "STRONG BUY",
+        source: "V2",
+        confidence: 83,
+        metrics: {
+            pe: 5.2, roe: 45.5, roic: 32.5, dividendYield: 12.5,
+            netDebtToEbitda: -0.8, ebitdaMargin: 75.5, revenueGrowth: 35.5,
+            earningsGrowth: 48, pb: 2.4, evEbitda: 3.2, beta: 1.45,
+            freeFloat: 82, liquidityDaily: 145000000, fcfYield: 22.5, assetTurnover: 0.95
+        },
+        performance: { ytd: 55, oneYear: 85, threeYears: 285, fiveYears: 450 },
+        catalysts: ["DY 12.5% - excepcional", "Aquisições de ativos maduros", "Eficiência operacional líder", "Caixa líquido"],
+        risks: ["Volatilidade do petróleo", "Risco operacional offshore", "Dependência de poucos ativos"],
+        keyHighlights: ["ROE 45.5% - extraordinário", "Melhor operadora independente do Brasil", "Geração de caixa massiva"],
+        analystConsensus: { buy: 14, hold: 1, sell: 0 },
+        lastResults: { quarter: "2Q25", revenue: 3200000000, netIncome: 1850000000, ebitda: 2416000000 },
+        nextEarnings: "2025-11-11",
+        irWebsite: "https://ri.petrorio.com.br/",
+        lastUpdated: "2025-11-15T10:30:00Z",
+        dataSource: "hybrid"
+    },
+
+    {
+        ticker: "MRFG3",
+        name: "Marfrig",
+        sector: "Alimentos",
+        subsector: "Proteínas",
+        pod: "Pod Global",
+        marketCap: 12000000000,
+        currentPrice: 6.18,
+        targetPrice: 9.50,
+        upside: 53.72,
+        projections: { target1Y: 9.50, target3Y: 13.00, target5Y: 16.00, target10Y: 22.00 },
+        score: 73,
+        ranking: 29,
+        recommendation: "BUY",
+        source: "V2",
+        confidence: 71,
+        metrics: {
+            pe: 12.5, roe: 15.2, roic: 9.5, dividendYield: 2.8,
+            netDebtToEbitda: 3.2, ebitdaMargin: 8.5, revenueGrowth: 11.5,
+            earningsGrowth: 18, pb: 1.9, evEbitda: 7.8, beta: 1.38,
+            freeFloat: 68, liquidityDaily: 42000000, fcfYield: 6.5, assetTurnover: 1.65
+        },
+        performance: { ytd: -12, oneYear: -5, threeYears: 8, fiveYears: 28 },
+        catalysts: ["Exposição aos EUA (National Beef)", "Consolidação do setor", "Aumento de margens"],
+        risks: ["Alta alavancagem", "Volatilidade de commodities", "Competição"],
+        keyHighlights: ["Upside 53.7%", "Operações nos EUA e América do Sul"],
+        analystConsensus: { buy: 8, hold: 4, sell: 1 },
+        lastResults: { quarter: "2Q25", revenue: 25000000000, netIncome: 280000000, ebitda: 2125000000 },
+        nextEarnings: "2025-11-13",
+        irWebsite: "https://ri.marfrig.com.br/",
         lastUpdated: "2025-11-15T10:30:00Z",
         dataSource: "hybrid"
     }
-
-    // NOTA: As demais 13 empresas seguem a mesma estrutura.
-    // Para manter o arquivo em tamanho gerenciável, vou incluir versões simplificadas.
-    // Em produção, todas as 16 empresas devem ter dados completos.
 ];
 
-/**
- * HELPER: Obter empresa por ticker
- */
+// HELPERS
 function getCompanyByTicker(ticker) {
     return COMPANIES_DATABASE.find(c => c.ticker === ticker);
 }
 
-/**
- * HELPER: Filtrar por Pod
- */
 function getCompaniesByPod(pod) {
     return COMPANIES_DATABASE.filter(c => c.pod === pod);
 }
 
-/**
- * HELPER: Verificar se empresa tem dados avançados
- */
 function hasEnhancedData(company) {
-    return company && (
-        company.analystTargets ||
-        company.technicalAnalysis ||
-        company.smartMoney ||
-        company.mlPredictions
-    );
+    return company && (company.analystTargets || company.technicalAnalysis || company.smartMoney || company.mlPredictions);
 }
 
-/**
- * EXPORT
- */
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        COMPANIES_DATABASE,
-        getCompanyByTicker,
-        getCompaniesByPod,
-        hasEnhancedData
-    };
+    module.exports = { COMPANIES_DATABASE, getCompanyByTicker, getCompaniesByPod, hasEnhancedData };
 }
 
 console.log('✓ data-companies-enhanced.js carregado');
 console.log(`✓ ${COMPANIES_DATABASE.length} empresas disponíveis`);
-console.log(`✓ Dados enriquecidos (FASE 1.1-1.7) integrados`);
