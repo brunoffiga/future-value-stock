@@ -519,22 +519,161 @@ function getSimulatorHTML() {
 }
 
 /**
- * PLACEHOLDER: Simulador
+ * SIMULADOR DE ALOCAÇÃO
  */
 function setupSimulator() {
-    // Implementação em próxima etapa
+    console.log('✓ Simulador configurado');
 }
 
 function populateStockChips() {
-    // Implementação em próxima etapa
+    const container = document.getElementById('stock-chips-container');
+    if (!container) return;
+
+    // Selecionar top 10 empresas por score
+    const topCompanies = companiesData.slice(0, 10);
+
+    container.innerHTML = topCompanies.map(company => `
+        <div class="stock-chip ${simulationSelectedTickers.has(company.ticker) ? 'selected' : ''}"
+             onclick="toggleStockSelection('${company.ticker}')">
+            <span class="chip-ticker">${company.ticker}</span>
+            <span class="chip-name">${company.name}</span>
+            <span class="chip-score">${company.finalScore || company.score}</span>
+        </div>
+    `).join('');
+}
+
+function toggleStockSelection(ticker) {
+    if (simulationSelectedTickers.has(ticker)) {
+        simulationSelectedTickers.delete(ticker);
+    } else {
+        simulationSelectedTickers.add(ticker);
+    }
+    populateStockChips();
 }
 
 /**
- * PLACEHOLDER: Gráficos
+ * GRÁFICOS COM CHART.JS
  */
 function createAllCharts() {
-    console.log('Criando gráficos...');
-    // Implementação em próxima etapa
+    console.log('📊 Criando gráficos...');
+
+    if (typeof Chart === 'undefined') {
+        console.warn('⚠ Chart.js não carregado');
+        return;
+    }
+
+    // Gráfico 1: Top 8 Múltiplos de Crescimento
+    createTopMultipleChart();
+
+    // Gráfico 2: Múltiplo Médio por Pod
+    createPodMultipleChart();
+
+    // Gráfico 3: Alocação Recomendada
+    createAllocationChart();
+
+    console.log('✅ Gráficos criados com sucesso');
+}
+
+function createTopMultipleChart() {
+    const ctx = document.getElementById('topMultipleChart');
+    if (!ctx) return;
+
+    const top8 = companiesData.slice(0, 8);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: top8.map(c => c.ticker),
+            datasets: [{
+                label: 'Múltiplo 10Y',
+                data: top8.map(c => {
+                    const target10Y = getTargetPrice(c, '10Y');
+                    return target10Y ? (target10Y / c.currentPrice).toFixed(2) : 0;
+                }),
+                backgroundColor: '#0a84ff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#2c2c2e' } },
+                x: { grid: { color: '#2c2c2e' } }
+            }
+        }
+    });
+}
+
+function createPodMultipleChart() {
+    const ctx = document.getElementById('podMultipleChart');
+    if (!ctx) return;
+
+    const pods = ['Pod Selic', 'Pod Global', 'Pod Secular'];
+    const avgMultiples = pods.map(pod => {
+        const podCompanies = companiesData.filter(c => c.pod === pod);
+        if (podCompanies.length === 0) return 0;
+
+        const sum = podCompanies.reduce((acc, c) => {
+            const target10Y = getTargetPrice(c, '10Y');
+            return acc + (target10Y ? target10Y / c.currentPrice : 0);
+        }, 0);
+
+        return (sum / podCompanies.length).toFixed(2);
+    });
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: pods.map(p => p.replace('Pod ', '')),
+            datasets: [{
+                label: 'Múltiplo Médio 10Y',
+                data: avgMultiples,
+                backgroundColor: ['#0a84ff', '#30d158', '#bf5af2']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#2c2c2e' } },
+                x: { grid: { color: '#2c2c2e' } }
+            }
+        }
+    });
+}
+
+function createAllocationChart() {
+    const ctx = document.getElementById('allocationChart');
+    if (!ctx) return;
+
+    const top5 = companiesData.slice(0, 5);
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: top5.map(c => c.ticker),
+            datasets: [{
+                data: top5.map(c => (c.finalScore || c.score)),
+                backgroundColor: ['#0a84ff', '#30d158', '#bf5af2', '#ff9f0a', '#ff453a']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#ffffff' }
+                }
+            }
+        }
+    });
 }
 
 /**
