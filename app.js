@@ -184,12 +184,19 @@ function createSection(view) {
             </section>
         `;
     } else if (view === 'charts') {
+        // Seção unificada de Análise Gráfica + Simulador
         container.innerHTML += `
             <section id="charts-section" class="content-section active">
+                <div class="section-title">Análise Gráfica & Simulador de Carteira</div>
+                <div class="section-subtitle">
+                    Visualização de métricas-chave e simulação de alocação inteligente
+                </div>
+
+                <!-- Gráficos -->
                 <div class="charts-grid">
                     <div class="chart-card">
                         <h2>Top 8 Múltiplos de Crescimento</h2>
-                        <div class="chart-subtitle">Ações com maior potencial de upside.</div>
+                        <div class="chart-subtitle">Ações com maior potencial de upside 5Y.</div>
                         <div class="chart-container"><canvas id="topMultipleChart"></canvas></div>
                     </div>
                     <div class="chart-card">
@@ -199,25 +206,24 @@ function createSection(view) {
                     </div>
                     <div class="chart-card">
                         <h2>Alocação Recomendada</h2>
-                        <div class="chart-subtitle">Foco nos maiores múltiplos.</div>
+                        <div class="chart-subtitle">Distribuição sugerida por score.</div>
                         <div class="chart-container"><canvas id="allocationChart"></canvas></div>
                     </div>
-                    <div class="chart-card">
-                        <h2>Distribuição por Setor</h2>
-                        <div class="chart-subtitle">Diversificação setorial.</div>
-                        <div class="chart-container"><canvas id="sectorChart"></canvas></div>
-                    </div>
+                </div>
+
+                <!-- Simulador Integrado -->
+                <div class="simulator-integrated">
+                    ${getSimulatorHTML()}
                 </div>
             </section>
         `;
-        setTimeout(() => createAllCharts(), 100);
+        setTimeout(() => {
+            createAllCharts();
+            populateStockChips();
+        }, 100);
     } else if (view === 'simulator') {
-        container.innerHTML += `
-            <section id="simulator-section" class="content-section active">
-                ${getSimulatorHTML()}
-            </section>
-        `;
-        populateStockChips();
+        // Redireciona para charts (seção unificada)
+        switchView('charts');
     }
 }
 
@@ -278,11 +284,9 @@ function renderTable() {
     tbody.innerHTML = sorted.map(company => {
         const isSelected = selectedCompanies.has(company.ticker);
 
-        // Calcular upsides
+        // Calcular upsides apenas para 1Y e 5Y
         const upside1Y = calculateUpside(company.currentPrice, getTargetPrice(company, '1Y'));
-        const upside3Y = calculateUpside(company.currentPrice, getTargetPrice(company, '3Y'));
         const upside5Y = calculateUpside(company.currentPrice, getTargetPrice(company, '5Y'));
-        const upside10Y = calculateUpside(company.currentPrice, getTargetPrice(company, '10Y'));
 
         return `
             <tr class="${isSelected ? 'selected' : ''}" data-ticker="${company.ticker}">
@@ -300,26 +304,24 @@ function renderTable() {
                 <td>${company.sector}</td>
                 <td><span class="tag ${getPodClass(company.pod)}">${company.pod.replace('Pod ', '')}</span></td>
                 <td>${formatCurrency(company.currentPrice)}</td>
-                <td><span class="score-badge ${getScoreClass(company.score)}">${company.score}</span></td>
+                <td><span class="score-badge ${getScoreClass(company.finalScore || company.score)}">${company.finalScore || company.score}</span></td>
                 <td class="${company.metrics.roe > 20 ? 'change-value positive' : ''}">${formatNumber(company.metrics.roe, 1)}%</td>
                 <td>${company.metrics.pe > 0 ? formatNumber(company.metrics.pe, 2) + 'x' : 'N/A'}</td>
                 <td class="change-value ${upside1Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside1Y)}</td>
-                <td class="change-value ${upside3Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside3Y)}</td>
                 <td class="change-value ${upside5Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside5Y)}</td>
-                <td class="change-value ${upside10Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside10Y)}</td>
                 <td>${formatCurrency(getTargetPrice(company, '1Y'))}</td>
+                <td>${formatCurrency(getTargetPrice(company, '5Y'))}</td>
                 <td class="change-value ${company.performance?.ytd > 0 ? 'positive' : 'negative'}">
                     ${company.performance?.ytd ? formatPercentage(company.performance.ytd) : '-'}
                 </td>
                 <td>${formatNumber(company.metrics.dividendYield, 2)}%</td>
                 <td><span class="tag ${getRecommendationClass(company.recommendation)}">${company.recommendation}</span></td>
-                <td><span class="tag ${getSourceClass(company.source)}">${company.source}</span></td>
             </tr>
         `;
     }).join('');
 
     if (sorted.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="18" style="text-align:center;">Nenhuma empresa encontrada.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="16" style="text-align:center;">Nenhuma empresa encontrada.</td></tr>';
     }
 }
 
@@ -488,33 +490,242 @@ function calculateUpside(currentPrice, targetPrice) {
 }
 
 /**
- * PLACEHOLDER: HTML para Strategy Section
+ * HTML COMPLETO PARA STRATEGY SECTION - Teses & Playbook
  */
 function getStrategyHTML() {
     return `
-        <div class="section">
-            <h2>Teses & Estratégia</h2>
-            <p>Playbook completo em desenvolvimento...</p>
+<div class="section-title">Teses de Investimento & Playbook de Execução</div>
+<div class="section-subtitle">
+    O racional estratégico, gatilhos de entrada/saída e regras de decisão para cada tese de investimento (Pod)
+</div>
+
+<div class="strategy-container">
+
+    <!-- Pod Secular -->
+    <div class="strategy-card">
+        <div class="header secular">
+            <h3>🚀 Pod Secular (Crescimento Estrutural)</h3>
+            <p class="thesis-intro">Tese de crescimento de longo prazo, <strong>independente do ciclo macroeconômico</strong>. Empresas com vantagens competitivas sustentáveis (moat), alta capacidade de reinvestimento e geração de valor consistente. Foco em <code>ROE</code> alto, margens expansíveis e crescimento acima da média do mercado.</p>
         </div>
+        <div class="content">
+            <div class="buy-section">
+                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
+                <ul>
+                    <li><strong>Qualidade Comprovada:</strong> <code>metrics.roe</code> ≥ 20% <strong>E</strong> <code>metrics.roic</code> ≥ 15% (indicando retornos superiores ao custo de capital).</li>
+                    <li><strong>Crescimento Sustentável:</strong> <code>metrics.earningsGrowth</code> ≥ 15% a.a. por pelo menos 2 trimestres consecutivos.</li>
+                    <li><strong>Confirmação Técnica:</strong> <code>technicalAnalysis.momentum.macd.trend</code> = "BULLISH" (momentum técnico confirmando a tese).</li>
+                    <li><strong>Smart Money Positivo:</strong> <code>smartMoney.institutional.flowTrend</code> = "POSITIVE" (capital institucional entrando).</li>
+                    <li><strong>Valuation Razoável:</strong> <code>metrics.pe</code> < 30x OU <code>metrics.pe / metrics.earningsGrowth</code> < 1.5 (PEG ratio atrativo).</li>
+                </ul>
+            </div>
+            <div class="sell-section">
+                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
+                <ul>
+                    <li><strong>Quebra da Tese de Crescimento:</strong> <code>metrics.earningsGrowth</code> fica abaixo de 5% (ou da inflação <code>macroAnalysis.brazil.ipca</code>) por 2 trimestres consecutivos.</li>
+                    <li><strong>Deterioração de Margens:</strong> <code>metrics.ebitdaMargin</code> apresenta queda superior a 20% relativa em 3 trimestres, indicando perda de poder de precificação (moat enfraquecido).</li>
+                    <li><strong>Valuation Esticado:</strong> <code>metrics.pe</code> > 40x E <code>upside1Y</code> < 15% (risco/retorno desfavorável).</li>
+                    <li><strong>Reversão Técnica:</strong> <code>technicalAnalysis.momentum.rsi14</code> > 80 por 3 semanas E <code>technicalAnalysis.volume.accumDist</code> = "DISTRIBUTION" (euforia + distribuição institucional).</li>
+                </ul>
+            </div>
+            <div class="examples-section">
+                <h4>📌 Exemplos de Empresas Pod Secular:</h4>
+                <p>WEG, RADL3 (Raia Drogasil), HYPE3 (Hypera), empresas de tecnologia/saúde com crescimento estrutural.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pod Global -->
+    <div class="strategy-card">
+        <div class="header global">
+            <h3>🌍 Pod Global (Commodities & Exportação)</h3>
+            <p class="thesis-intro">Tese <strong>descorrelacionada da Selic brasileira</strong>. O retorno depende do ciclo da commodity subjacente (minério, celulose, petróleo) e da variação cambial (Real vs Dólar). Empresas exportadoras ou com receita dolarizada se beneficiam de <code>macroAnalysis.brazil.exchange.trend</code> = "DEPRECIATION" (dólar em alta).</p>
+        </div>
+        <div class="content">
+            <div class="buy-section">
+                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
+                <ul>
+                    <li><strong>Ciclo de Commodity Iniciando Alta:</strong> O preço da commodity principal (verificar em fontes externas: minério, celulose, petróleo) inicia tendência de alta confirmada (ex: acima da Média Móvel de 50 dias).</li>
+                    <li><strong>Câmbio Favorável:</strong> <code>macroAnalysis.brazil.exchange.trend</code> = "DEPRECIATION" (Real se desvalorizando, inflando receita em Reais).</li>
+                    <li><strong>Valuation de Ciclo:</strong> <code>metrics.evEbitda</code> < 5x (indicando ponto de entrada atrativo no ciclo de commodity).</li>
+                    <li><strong>Alavancagem Controlada:</strong> <code>metrics.netDebtToEbitda</code> < 2.5x (empresa com balanço saudável para aproveitar a alta).</li>
+                    <li><strong>Upside Expressivo:</strong> <code>upside1Y</code> > 25% (potencial justifica o risco de timing do ciclo).</li>
+                </ul>
+            </div>
+            <div class="sell-section">
+                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
+                <ul>
+                    <li><strong>Reversão do Ciclo de Commodity:</strong> O preço da commodity perde a Média Móvel de 200 dias ou apresenta padrão técnico de topo (ex: topos descendentes).</li>
+                    <li><strong>Compressão de Margem:</strong> <code>metrics.ebitdaMargin</code> começa a cair, sinalizando que custos estão subindo mais rápido que preços (pico do ciclo).</li>
+                    <li><strong>Reversão Cambial:</strong> <code>macroAnalysis.brazil.exchange.trend</code> = "APPRECIATION" (Real se fortalecendo, prejudicando exportadores).</li>
+                    <li><strong>Valuation Esticado de Ciclo:</strong> <code>metrics.evEbitda</code> > 8x (indicando euforia no setor).</li>
+                </ul>
+            </div>
+            <div class="examples-section">
+                <h4>📌 Exemplos de Empresas Pod Global:</h4>
+                <p>PETR4 (Petrobras), VALE3 (Vale), SUZB3 (Suzano), CSNA3 (CSN), PRIO3 (PetroRio).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pod Selic -->
+    <div class="strategy-card">
+        <div class="header selic">
+            <h3>📉 Pod Selic (Virada de Ciclo Macro)</h3>
+            <p class="thesis-intro">Tese de <strong>timing macroeconômico</strong>. Ações altamente sensíveis à queda da taxa Selic (juros). Empresas de setores cíclicos domésticos (construção civil, varejo, bancos de crédito) se beneficiam da redução do custo de capital e aquecimento da economia interna. Alavancagem financeira positiva: quanto maior a dívida, maior o ganho com a queda dos juros.</p>
+        </div>
+        <div class="content">
+            <div class="buy-section">
+                <h4>✅ Gatilhos de Compra (Quando Entrar)</h4>
+                <ul>
+                    <li><strong>Ciclo de Queda de Juros Confirmado:</strong> <code>macroAnalysis.brazil.selic.trend</code> = "DOWN" (Banco Central em ciclo de corte de juros, confirmado por pelo menos 2 reuniões consecutivas do COPOM).</li>
+                    <li><strong>Revisão de Consenso:</strong> <code>analystTargets.revisions.delta30d</code> > 10% (mercado começando a reprecificar o setor para cima).</li>
+                    <li><strong>Alavancagem como Catalisador:</strong> Focar em empresas com <code>metrics.netDebtToEbitda</code> > 1.5x, pois são as que mais se beneficiam da queda no custo da dívida.</li>
+                    <li><strong>Valuation Comprimido:</strong> <code>metrics.pe</code> < 12x (setor ainda subprecificado, não refletindo a melhora macro).</li>
+                    <li><strong>Upside Substancial:</strong> <code>upside1Y</code> > 30% (potencial de reprecificação justifica o risco).</li>
+                </ul>
+            </div>
+            <div class="sell-section">
+                <h4>❌ Gatilhos de Venda (Quando Sair)</h4>
+                <ul>
+                    <li><strong>Inversão do Ciclo de Juros:</strong> <code>macroAnalysis.brazil.selic.trend</code> = "UP" (COPOM sinaliza novo ciclo de alta de juros).</li>
+                    <li><strong>Valuation de Euforia:</strong> <code>metrics.pe</code> do setor (ex: Construção Civil) ultrapassa 20x, indicando que a tese já foi precificada.</li>
+                    <li><strong>Deterioração Fundamental:</strong> <code>metrics.revenueGrowth</code> < 5% por 2 trimestres, indicando que a melhora macro não está se traduzindo em resultados.</li>
+                    <li><strong>Realização de Lucro em Alvo:</strong> <code>currentPrice</code> atinge ou supera <code>projections.target1Y</code> (tese concluída, realizar lucro).</li>
+                </ul>
+            </div>
+            <div class="examples-section">
+                <h4>📌 Exemplos de Empresas Pod Selic:</h4>
+                <p>PLPL3 (Plano & Plano), CURY3 (Cury), DIRR3 (Direcional), CPFE3 (CPFL), CMIG4 (Cemig), EQTL3 (Equatorial).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Playbook de Saída Geral -->
+    <div class="strategy-card">
+        <div class="header exit">
+            <h3>🎯 Playbook Universal de Saída</h3>
+            <p class="thesis-intro">Regras de decisão para <strong>realização de lucro, rotação de carteira ou stop loss fundamental</strong>, aplicáveis independentemente do Pod.</p>
+        </div>
+        <div class="content">
+            <div class="scenario">
+                <h4>📊 Cenário 1: Tese Concluída (Realizar Lucro)</h4>
+                <ul>
+                    <li><strong>Gatilho:</strong> <code>currentPrice</code> ≥ <code>projections.target1Y</code> (alvo de 1 ano atingido).</li>
+                    <li><strong>Ação:</strong> Venda parcial de 30-50% da posição para cristalizar lucro. Realocação do capital em nova oportunidade com <code>upside5Y</code> > 100% (múltiplo de crescimento superior).</li>
+                    <li><strong>Exceção:</strong> Se a empresa mantém <code>metrics.earningsGrowth</code> > 20% E <code>metrics.roe</code> > 25%, considerar manter a posição (tese de crescimento ainda intacta).</li>
+                </ul>
+            </div>
+
+            <div class="scenario">
+                <h4>🔄 Cenário 2: Custo de Oportunidade (Rotação de Carteira)</h4>
+                <ul>
+                    <li><strong>Gatilho:</strong> Um ativo na carteira (Ativo A) apresenta <code>upside5Y</code> < 50% (múltiplo de crescimento 5Y < 1.5x), enquanto surge uma nova tese (Ativo B) com <code>upside5Y</code> > 150% (múltiplo > 2.5x) E <code>score</code> ≥ 80.</li>
+                    <li><strong>Ação:</strong> Vender 100% do Ativo A e alocar 100% no Ativo B. A diferença de múltiplo justifica a rotação (maximizar potencial da carteira).</li>
+                    <li><strong>Validação:</strong> O Ativo B deve atender aos gatilhos de compra do Pod correspondente (não comprar apenas por upside, validar fundamentos).</li>
+                </ul>
+            </div>
+
+            <div class="scenario">
+                <h4>🚨 Cenário 3: Tese Quebrada (Stop Loss Fundamental)</h4>
+                <ul>
+                    <li><strong>Gatilho Crítico:</strong> <code>pod</code> = "Pod Sell" (empresa reclassificada como "Evitar" - ex: GOLL4, AMBP3).</li>
+                    <li><strong>Gatilho do Pod:</strong> O gatilho de <strong>saída</strong> do Pod principal foi ativado (ex: Pod Global com commodity em bear market confirmado, Pod Selic com Selic subindo).</li>
+                    <li><strong>Ação:</strong> <strong>Venda total e imediata</strong>. Preservação de capital é a prioridade absoluta. Não esperar recuperação - tese já invalidada.</li>
+                    <li><strong>Exceção Zero:</strong> Não há exceção. Tese quebrada = sair.</li>
+                </ul>
+            </div>
+
+            <div class="scenario">
+                <h4>⚖️ Cenário 4: Gerenciamento de Risco (Rebalanceamento)</h4>
+                <ul>
+                    <li><strong>Gatilho:</strong> Um ativo ultrapassou 25% da carteira total (concentração excessiva), mesmo que a tese continue válida.</li>
+                    <li><strong>Ação:</strong> Reduzir posição para 15-20% da carteira, realocando o excesso em outras oportunidades do portfólio para diversificação.</li>
+                    <li><strong>Racionalidade:</strong> Proteger a carteira de risco idiossincrático (evento específico da empresa).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="strategy-footer">
+    <p><strong>Nota Importante:</strong> Este playbook é um framework de decisão baseado em dados quantitativos. Toda decisão de investimento deve considerar também análise qualitativa (governança, competição, regulação) e tolerância individual ao risco. <strong>Rentabilidade passada não garante rentabilidade futura.</strong></p>
+</div>
     `;
 }
 
 /**
- * PLACEHOLDER: HTML para Simulator Section
+ * HTML COMPLETO PARA SIMULATOR - Simulador de Alocação Inteligente
  */
 function getSimulatorHTML() {
     return `
-        <div class="section">
-            <h2>Simulador de Aportes</h2>
-            <div id="stock-chips"></div>
-            <input type="number" id="monthly-input" value="2500">
-            <select id="allocation-strategy">
-                <option value="aggressive">Agressiva</option>
-                <option value="balanced">Balanceada</option>
-                <option value="conservative">Conservadora</option>
-            </select>
-            <div id="allocation-results"></div>
+<div class="simulator-section">
+    <div class="simulator-title">💼 Simulador de Alocação Inteligente</div>
+    <div class="simulator-subtitle">
+        Monte sua carteira selecionando as melhores ações por score e simule o potencial de crescimento
+    </div>
+
+    <!-- Seleção de Ações -->
+    <div class="stock-selection-area">
+        <h3>1️⃣ Selecione as Ações (Top 10 por Score)</h3>
+        <div class="stock-chips-container" id="stock-chips-container">
+            <!-- Chips gerados dinamicamente via populateStockChips() -->
         </div>
+    </div>
+
+    <!-- Configuração do Aporte -->
+    <div class="allocation-config">
+        <h3>2️⃣ Configure o Aporte</h3>
+        <div class="config-grid">
+            <div class="config-item">
+                <label>Valor Total do Aporte (R$)</label>
+                <input type="number" id="monthly-input" value="10000" min="100" step="100" class="simulator-input">
+            </div>
+            <div class="config-item">
+                <label>Estratégia de Alocação</label>
+                <select id="allocation-strategy" class="simulator-select">
+                    <option value="score">Por Score (Maior score = maior peso)</option>
+                    <option value="equal">Igualitária (Mesmo peso para todas)</option>
+                    <option value="upside">Por Upside 5Y (Maior potencial = maior peso)</option>
+                </select>
+            </div>
+        </div>
+        <button class="simulator-btn" onclick="calculateAllocation()">🧮 Calcular Alocação</button>
+    </div>
+
+    <!-- Resultados da Alocação -->
+    <div class="allocation-results" id="allocation-results" style="display: none;">
+        <h3>3️⃣ Resultado da Alocação</h3>
+        <div class="results-summary" id="results-summary">
+            <!-- Resumo gerado dinamicamente -->
+        </div>
+        <div class="allocation-table-wrapper">
+            <table class="allocation-table" id="allocation-table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Score</th>
+                        <th>Pod</th>
+                        <th>Peso %</th>
+                        <th>Valor R$</th>
+                        <th>Preço Atual</th>
+                        <th>Qtd Ações</th>
+                        <th>Alvo 1Y</th>
+                        <th>Alvo 5Y</th>
+                        <th>Upside 1Y</th>
+                        <th>Upside 5Y</th>
+                    </tr>
+                </thead>
+                <tbody id="allocation-table-body">
+                    <!-- Linhas geradas dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+        <div class="projection-summary" id="projection-summary">
+            <!-- Projeções geradas dinamicamente -->
+        </div>
+    </div>
+</div>
     `;
 }
 
@@ -923,6 +1134,156 @@ function generateCatalystsRisksHTML(company) {
 
 function generateCompareCardHTML(company) {
     return `<div class="compare-card"><h3>${company.ticker}</h3></div>`;
+}
+
+/**
+ * CALCULADORA DE ALOCAÇÃO - Simulador
+ */
+function calculateAllocation() {
+    // Obter ações selecionadas
+    const selectedTickers = Array.from(simulationSelectedTickers);
+    if (selectedTickers.length === 0) {
+        alert('Selecione pelo menos uma ação para simular.');
+        return;
+    }
+
+    // Obter configurações
+    const totalAmount = parseFloat(document.getElementById('monthly-input').value) || 10000;
+    const strategy = document.getElementById('allocation-strategy').value;
+
+    // Buscar empresas selecionadas
+    const selectedCompanies = companiesData.filter(c => selectedTickers.includes(c.ticker));
+
+    // Calcular pesos baseado na estratégia
+    let weights = [];
+    if (strategy === 'equal') {
+        // Alocação igualitária
+        weights = selectedCompanies.map(() => 1 / selectedCompanies.length);
+    } else if (strategy === 'score') {
+        // Alocação por score (maior score = maior peso)
+        const totalScore = selectedCompanies.reduce((sum, c) => sum + (c.finalScore || c.score), 0);
+        weights = selectedCompanies.map(c => (c.finalScore || c.score) / totalScore);
+    } else if (strategy === 'upside') {
+        // Alocação por upside 5Y (maior upside = maior peso)
+        const upsides = selectedCompanies.map(c => {
+            const upside = calculateUpside(c.currentPrice, getTargetPrice(c, '5Y'));
+            return Math.max(upside, 0); // Evitar negativos
+        });
+        const totalUpside = upsides.reduce((sum, u) => sum + u, 0);
+        weights = upsides.map(u => totalUpside > 0 ? u / totalUpside : 1 / selectedCompanies.length);
+    }
+
+    // Calcular alocação para cada empresa
+    const allocations = selectedCompanies.map((company, i) => {
+        const weight = weights[i];
+        const value = totalAmount * weight;
+        const quantity = Math.floor(value / company.currentPrice);
+        const actualValue = quantity * company.currentPrice;
+        const upside1Y = calculateUpside(company.currentPrice, getTargetPrice(company, '1Y'));
+        const upside5Y = calculateUpside(company.currentPrice, getTargetPrice(company, '5Y'));
+
+        return {
+            ticker: company.ticker,
+            name: company.name,
+            pod: company.pod,
+            score: company.finalScore || company.score,
+            weight: weight * 100,
+            value: actualValue,
+            currentPrice: company.currentPrice,
+            quantity,
+            target1Y: getTargetPrice(company, '1Y'),
+            target5Y: getTargetPrice(company, '5Y'),
+            upside1Y,
+            upside5Y
+        };
+    });
+
+    // Calcular métricas gerais
+    const totalAllocated = allocations.reduce((sum, a) => sum + a.value, 0);
+    const weightedUpside1Y = allocations.reduce((sum, a) => sum + (a.upside1Y * a.weight / 100), 0);
+    const weightedUpside5Y = allocations.reduce((sum, a) => sum + (a.upside5Y * a.weight / 100), 0);
+    const expectedValue1Y = totalAllocated * (1 + weightedUpside1Y / 100);
+    const expectedValue5Y = totalAllocated * (1 + weightedUpside5Y / 100);
+
+    // Renderizar resultados
+    renderAllocationResults(allocations, {
+        totalAmount,
+        totalAllocated,
+        weightedUpside1Y,
+        weightedUpside5Y,
+        expectedValue1Y,
+        expectedValue5Y
+    });
+}
+
+function renderAllocationResults(allocations, summary) {
+    // Mostrar seção de resultados
+    document.getElementById('allocation-results').style.display = 'block';
+
+    // Renderizar resumo
+    document.getElementById('results-summary').innerHTML = `
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="summary-label">Total Aportado:</span>
+                <span class="summary-value">${formatCurrency(summary.totalAllocated)}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Número de Ações:</span>
+                <span class="summary-value">${allocations.length}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Upside Médio 1Y:</span>
+                <span class="summary-value positive">${formatPercentage(summary.weightedUpside1Y)}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Upside Médio 5Y:</span>
+                <span class="summary-value positive">${formatPercentage(summary.weightedUpside5Y)}</span>
+            </div>
+        </div>
+    `;
+
+    // Renderizar tabela de alocação
+    const tbody = document.getElementById('allocation-table-body');
+    tbody.innerHTML = allocations.map(a => `
+        <tr>
+            <td><strong>${a.ticker}</strong></td>
+            <td><span class="score-badge ${getScoreClass(a.score)}">${a.score}</span></td>
+            <td><span class="tag ${getPodClass(a.pod)}">${a.pod.replace('Pod ', '')}</span></td>
+            <td>${formatNumber(a.weight, 1)}%</td>
+            <td>${formatCurrency(a.value)}</td>
+            <td>${formatCurrency(a.currentPrice)}</td>
+            <td>${a.quantity}</td>
+            <td>${formatCurrency(a.target1Y)}</td>
+            <td>${formatCurrency(a.target5Y)}</td>
+            <td class="${a.upside1Y > 0 ? 'positive' : 'negative'}">${formatPercentage(a.upside1Y)}</td>
+            <td class="${a.upside5Y > 0 ? 'positive' : 'negative'}">${formatPercentage(a.upside5Y)}</td>
+        </tr>
+    `).join('');
+
+    // Renderizar projeções
+    document.getElementById('projection-summary').innerHTML = `
+        <h4>📈 Projeção de Patrimônio</h4>
+        <div class="projection-grid">
+            <div class="projection-item">
+                <span class="projection-label">Investimento Inicial:</span>
+                <span class="projection-value">${formatCurrency(summary.totalAllocated)}</span>
+            </div>
+            <div class="projection-item">
+                <span class="projection-label">Patrimônio Esperado em 1 Ano:</span>
+                <span class="projection-value positive">${formatCurrency(summary.expectedValue1Y)}</span>
+                <span class="projection-delta">(${formatPercentage(summary.weightedUpside1Y)} retorno)</span>
+            </div>
+            <div class="projection-item">
+                <span class="projection-label">Patrimônio Esperado em 5 Anos:</span>
+                <span class="projection-value positive">${formatCurrency(summary.expectedValue5Y)}</span>
+                <span class="projection-delta">(${formatPercentage(summary.weightedUpside5Y)} retorno total)</span>
+            </div>
+        </div>
+        <p class="disclaimer">⚠️ <strong>Aviso:</strong> Estas são projeções baseadas em dados históricos e consenso de mercado. Não há garantia de rentabilidade futura.</p>
+    `;
+
+    // Scroll suave para resultados
+    document.getElementById('allocation-results').scrollIntoView({ behavior: 'smooth' });
 }
 
 console.log('✓ app.js carregado');
