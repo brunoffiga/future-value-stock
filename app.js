@@ -538,10 +538,248 @@ function createAllCharts() {
 }
 
 /**
- * PLACEHOLDER: Geração de HTML Dinâmico
+ * GERAÇÃO DE HTML DINÂMICO - Análise Detalhada
  */
 function generateAnalysisHTML(company) {
-    return `<p>Análise detalhada de ${company.ticker} em desenvolvimento...</p>`;
+    const upside1Y = calculateUpside(company.currentPrice, getTargetPrice(company, '1Y'));
+    const upside3Y = calculateUpside(company.currentPrice, getTargetPrice(company, '3Y'));
+    const upside5Y = calculateUpside(company.currentPrice, getTargetPrice(company, '5Y'));
+    const upside10Y = calculateUpside(company.currentPrice, getTargetPrice(company, '10Y'));
+
+    return `
+        <div class="analysis-content">
+            <!-- Cabeçalho da Análise -->
+            <div class="analysis-header">
+                <div class="header-left">
+                    <h2>${company.name} (${company.ticker})</h2>
+                    <p class="sector-info">${company.sector} ${company.subsector ? `• ${company.subsector}` : ''}</p>
+                    <span class="tag ${getPodClass(company.pod)}">${company.pod}</span>
+                </div>
+                <div class="header-right">
+                    <div class="price-box">
+                        <span class="label">Preço Atual</span>
+                        <span class="value">${formatCurrency(company.currentPrice)}</span>
+                    </div>
+                    <div class="score-box">
+                        <span class="label">Score</span>
+                        <span class="value score-badge ${getScoreClass(company.finalScore || company.score)}">${company.finalScore || company.score}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scores Multidimensionais -->
+            ${generateScoresBreakdownHTML(company)}
+
+            <!-- Valuation e Projeções -->
+            <div class="section">
+                <h3>📊 Valuation e Projeções Temporais</h3>
+                <div class="projections-grid">
+                    <div class="projection-card">
+                        <div class="horizon">1 Ano</div>
+                        <div class="target">${formatCurrency(getTargetPrice(company, '1Y'))}</div>
+                        <div class="upside ${upside1Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside1Y)}</div>
+                    </div>
+                    <div class="projection-card">
+                        <div class="horizon">3 Anos</div>
+                        <div class="target">${formatCurrency(getTargetPrice(company, '3Y'))}</div>
+                        <div class="upside ${upside3Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside3Y)}</div>
+                    </div>
+                    <div class="projection-card">
+                        <div class="horizon">5 Anos</div>
+                        <div class="target">${formatCurrency(getTargetPrice(company, '5Y'))}</div>
+                        <div class="upside ${upside5Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside5Y)}</div>
+                    </div>
+                    <div class="projection-card">
+                        <div class="horizon">10 Anos</div>
+                        <div class="target">${formatCurrency(getTargetPrice(company, '10Y'))}</div>
+                        <div class="upside ${upside10Y > 0 ? 'positive' : 'negative'}">${formatPercentage(upside10Y)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Métricas Fundamentalistas -->
+            ${generateFundamentalsHTML(company)}
+
+            <!-- Consenso de Analistas -->
+            ${generateAnalystConsensusHTML(company)}
+
+            <!-- Análise Técnica -->
+            ${generateTechnicalAnalysisHTML(company)}
+
+            <!-- Smart Money -->
+            ${generateSmartMoneyHTML(company)}
+
+            <!-- Predições ML -->
+            ${generateMLPredictionsHTML(company)}
+
+            <!-- Performance Histórica -->
+            ${generatePerformanceHTML(company)}
+
+            <!-- Catalisadores e Riscos -->
+            ${generateCatalystsRisksHTML(company)}
+
+            <!-- Recomendação Final -->
+            <div class="section final-recommendation">
+                <h3>🎯 Recomendação Final</h3>
+                <div class="recommendation-box">
+                    <div class="recommendation-badge ${getRecommendationClass(company.recommendation)}">
+                        ${company.recommendation}
+                    </div>
+                    <div class="confidence-info">
+                        <span>Confidence Score: <strong>${company.confidence || company.scoreConfidence || 'N/A'}</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Funções auxiliares para gerar seções específicas da análise
+
+function generateScoresBreakdownHTML(company) {
+    if (!company.scoreBreakdown) return '';
+
+    const breakdown = company.scoreBreakdown;
+    return `
+        <div class="section">
+            <h3>🎯 Scores Multidimensionais</h3>
+            <div class="scores-grid">
+                <div class="score-item"><span>Fundamental:</span> <strong>${Math.round(breakdown.fundamental || 0)}/100</strong></div>
+                <div class="score-item"><span>Técnico:</span> <strong>${Math.round(breakdown.technical || 0)}/100</strong></div>
+                <div class="score-item"><span>Consenso:</span> <strong>${Math.round(breakdown.consensus || 0)}/100</strong></div>
+                <div class="score-item"><span>Smart Money:</span> <strong>${Math.round(breakdown.smartMoney || 0)}/100</strong></div>
+                <div class="score-item"><span>Macro:</span> <strong>${Math.round(breakdown.macro || 0)}/100</strong></div>
+                <div class="score-item"><span>ML:</span> <strong>${Math.round(breakdown.ml || 0)}/100</strong></div>
+            </div>
+        </div>
+    `;
+}
+
+function generateFundamentalsHTML(company) {
+    if (!company.metrics) return '';
+
+    const m = company.metrics;
+    return `
+        <div class="section">
+            <h3>📈 Métricas Fundamentalistas</h3>
+            <div class="metrics-grid">
+                <div class="metric"><span>P/L:</span> <strong>${m.pe > 0 ? formatNumber(m.pe, 2) + 'x' : 'N/A'}</strong></div>
+                <div class="metric"><span>P/VP:</span> <strong>${formatNumber(m.pb, 2)}x</strong></div>
+                <div class="metric"><span>ROE:</span> <strong class="${m.roe > 20 ? 'positive' : ''}">${formatNumber(m.roe, 1)}%</strong></div>
+                <div class="metric"><span>ROIC:</span> <strong>${formatNumber(m.roic, 1)}%</strong></div>
+                <div class="metric"><span>Div. Yield:</span> <strong>${formatNumber(m.dividendYield, 2)}%</strong></div>
+                <div class="metric"><span>Dív/EBITDA:</span> <strong class="${m.netDebtToEbitda < 2 ? 'positive' : m.netDebtToEbitda > 4 ? 'negative' : ''}">${formatNumber(m.netDebtToEbitda, 2)}x</strong></div>
+                <div class="metric"><span>Marg. EBITDA:</span> <strong>${formatNumber(m.ebitdaMargin, 1)}%</strong></div>
+                <div class="metric"><span>Cresc. Receita:</span> <strong class="${m.revenueGrowth > 15 ? 'positive' : ''}">${formatNumber(m.revenueGrowth, 1)}%</strong></div>
+            </div>
+        </div>
+    `;
+}
+
+function generateAnalystConsensusHTML(company) {
+    if (!company.analystTargets) return '';
+
+    const at = company.analystTargets;
+    return `
+        <div class="section">
+            <h3>👥 Consenso de Analistas</h3>
+            <div class="consensus-info">
+                <div><strong>Preço-Alvo Médio:</strong> ${formatCurrency(at.consensus.mean)} (${at.consensus.count} analistas)</div>
+                <div><strong>Upside Implícito:</strong> <span class="${at.impliedUpside.toMean > 0 ? 'positive' : 'negative'}">${formatPercentage(at.impliedUpside.toMean)}</span></div>
+                <div><strong>Revisões (30d):</strong> ${at.revisions.upgrades} upgrades / ${at.revisions.downgrades} downgrades</div>
+            </div>
+        </div>
+    `;
+}
+
+function generateTechnicalAnalysisHTML(company) {
+    if (!company.technicalAnalysis) return '';
+
+    const tech = company.technicalAnalysis;
+    return `
+        <div class="section">
+            <h3>📉 Análise Técnica</h3>
+            <div class="technical-info">
+                <div><strong>Tendência:</strong> ${tech.momentum?.macd?.trend || 'N/A'}</div>
+                <div><strong>RSI(14):</strong> ${tech.momentum?.rsi14 || 'N/A'}</div>
+                <div><strong>Volume:</strong> ${tech.volume?.accumDist || 'N/A'}</div>
+                <div><strong>Suporte/Resistência:</strong> ${formatCurrency(tech.signals?.support)} / ${formatCurrency(tech.signals?.resistance)}</div>
+            </div>
+        </div>
+    `;
+}
+
+function generateSmartMoneyHTML(company) {
+    if (!company.smartMoney) return '';
+
+    const sm = company.smartMoney;
+    return `
+        <div class="section">
+            <h3>💰 Smart Money</h3>
+            <div class="smartmoney-info">
+                <div><strong>Insiders (90d):</strong> ${sm.insiders?.last90days?.netBuys > 0 ? `${sm.insiders.last90days.netBuys} compras líquidas` : 'Sem movimento significativo'}</div>
+                <div><strong>Fluxo Institucional:</strong> ${sm.institutional?.flowTrend || 'N/A'}</div>
+                <div><strong>Ownership Institucional:</strong> ${formatNumber(sm.institutional?.ownership || 0, 1)}%</div>
+            </div>
+        </div>
+    `;
+}
+
+function generateMLPredictionsHTML(company) {
+    if (!company.mlPredictions) return '';
+
+    const ml = company.mlPredictions;
+    return `
+        <div class="section">
+            <h3>🤖 Predições Machine Learning</h3>
+            <div class="ml-info">
+                <div><strong>Consenso Ensemble:</strong> ${ml.ensemble?.consensus || 'N/A'} (${formatNumber(ml.ensemble?.agreement * 100, 0)}% acordo)</div>
+                <div><strong>Predição 30d:</strong> ${formatCurrency(ml.randomForest?.prediction30d || 0)} (${formatPercentage(ml.randomForest?.expectedReturn || 0)} retorno esperado)</div>
+                <div><strong>Acurácia (90d):</strong> ${ml.backtest?.accuracy90d || 'N/A'}%</div>
+                <div><strong>Sharpe Ratio:</strong> ${formatNumber(ml.backtest?.sharpeRatio || 0, 2)}</div>
+            </div>
+        </div>
+    `;
+}
+
+function generatePerformanceHTML(company) {
+    if (!company.performance) return '';
+
+    const perf = company.performance;
+    return `
+        <div class="section">
+            <h3>📊 Performance Histórica</h3>
+            <div class="performance-grid">
+                <div class="perf-item"><span>YTD:</span> <strong class="${perf.ytd > 0 ? 'positive' : 'negative'}">${formatPercentage(perf.ytd)}</strong></div>
+                <div class="perf-item"><span>1 Ano:</span> <strong class="${perf.oneYear > 0 ? 'positive' : 'negative'}">${formatPercentage(perf.oneYear)}</strong></div>
+                <div class="perf-item"><span>3 Anos:</span> <strong class="${perf.threeYears > 0 ? 'positive' : 'negative'}">${formatPercentage(perf.threeYears || 0)}</strong></div>
+                <div class="perf-item"><span>5 Anos:</span> <strong>${perf.fiveYears ? formatPercentage(perf.fiveYears) : 'N/A'}</strong></div>
+            </div>
+        </div>
+    `;
+}
+
+function generateCatalystsRisksHTML(company) {
+    return `
+        <div class="section">
+            <h3>✨ Catalisadores</h3>
+            <ul class="catalysts-list">
+                ${(company.catalysts || []).map(cat => `<li>${cat}</li>`).join('')}
+            </ul>
+
+            <h3 class="risks-title">⚠️ Riscos</h3>
+            <ul class="risks-list">
+                ${(company.risks || []).map(risk => `<li>${risk}</li>`).join('')}
+            </ul>
+
+            ${company.keyHighlights && company.keyHighlights.length > 0 ? `
+                <h3>💡 Key Highlights</h3>
+                <ul class="highlights-list">
+                    ${company.keyHighlights.map(hl => `<li>${hl}</li>`).join('')}
+                </ul>
+            ` : ''}
+        </div>
+    `;
 }
 
 function generateCompareCardHTML(company) {
