@@ -14,6 +14,10 @@ let currentView = 'overview';
 let allCharts = {};
 let simulationSelectedTickers = new Set();
 
+// Engines
+let scoringEngine = null;
+let eventEngine = null;
+
 /**
  * INICIALIZAÇÃO
  */
@@ -45,23 +49,74 @@ document.addEventListener('DOMContentLoaded', () => {
  * FUNÇÕES DE CARGA DE DADOS
  */
 function loadData() {
-    // Carregar do arquivo data-companies.js
+    // Carregar do arquivo data-companies-enhanced.js
     companiesData = COMPANIES_DATABASE || [];
+    console.log(`📦 ${companiesData.length} empresas carregadas do database`);
 
-    // Calcular confidence score para cada empresa
+    // Inicializar Scoring Engine
+    if (typeof ScoringEngine !== 'undefined') {
+        scoringEngine = new ScoringEngine();
+        scoringEngine.initialize();
+    } else {
+        console.warn('⚠ ScoringEngine não disponível');
+    }
+
+    // Inicializar Event Engine
+    if (typeof AdvancedEventEngine !== 'undefined') {
+        eventEngine = new AdvancedEventEngine();
+        eventEngine.initialize();
+    } else {
+        console.warn('⚠ AdvancedEventEngine não disponível');
+    }
+
+    // Calcular scores multidimensionais para cada empresa
     companiesData = companiesData.map(company => {
+        // Calcular score multidimensional
+        if (scoringEngine) {
+            const scoreResult = scoringEngine.calculateScore(company);
+            company.finalScore = scoreResult.total;
+            company.scoreBreakdown = scoreResult.breakdown;
+            company.scoreConfidence = scoreResult.confidence;
+            company.signals = scoreResult.signals;
+
+            // Usar o score calculado se não houver score manual
+            if (!company.score || company.score === 0) {
+                company.score = scoreResult.total;
+            }
+        }
+
+        // Calcular confidence score (se disponível do confidence.js)
         if (typeof calculateProjectionConfidence !== 'undefined') {
             company.confidence = calculateProjectionConfidence(company);
         }
+
         return company;
+    });
+
+    // Avaliar triggers para todas as empresas
+    if (eventEngine) {
+        const alerts = eventEngine.evaluateAllCompanies(companiesData);
+        console.log(`🔔 ${alerts.length} alertas gerados`);
+
+        // Armazenar alertas críticos
+        window.criticalAlerts = alerts.filter(a => a.priority === 'CRITICAL' || a.priority === 'HIGH');
+    }
+
+    // Ordenar empresas por score
+    companiesData.sort((a, b) => (b.finalScore || b.score) - (a.finalScore || a.score));
+
+    // Atualizar rankings
+    companiesData.forEach((company, index) => {
+        company.ranking = index + 1;
     });
 
     // Pré-selecionar algumas ações para o simulador (Silver Bullets)
     companiesData
-        .filter(c => c.score >= 80 && (c.pod === 'Pod Selic' || c.pod === 'Pod Secular' || c.pod === 'Pod Global'))
+        .filter(c => (c.finalScore || c.score) >= 80 &&
+                     (c.pod === 'Pod Selic' || c.pod === 'Pod Secular' || c.pod === 'Pod Global'))
         .forEach(c => simulationSelectedTickers.add(c.ticker));
 
-    console.log(`✓ ${companiesData.length} empresas carregadas`);
+    console.log(`✅ ${companiesData.length} empresas processadas e ranqueadas`);
 }
 
 /**
