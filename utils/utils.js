@@ -111,6 +111,21 @@ function calculateUpside(currentPrice, targetPrice) {
     return ((targetPrice - currentPrice) / currentPrice) * 100;
 }
 
+function getTargetPrice(company, horizon) {
+    if (!company || !company.projections) return company.targetPrice || company.currentPrice;
+
+    // Map horizon strings to projection keys
+    const horizonMap = {
+        '1Y': 'target1Y',
+        '3Y': 'target3Y',
+        '5Y': 'target5Y',
+        '10Y': 'target10Y'
+    };
+
+    const key = horizonMap[horizon];
+    return company.projections[key] || company.targetPrice || company.currentPrice;
+}
+
 function calculateGrowthMultiple(currentPrice, targetPrice) {
     if (!currentPrice || !targetPrice || currentPrice === 0) return 0;
     return targetPrice / currentPrice;
